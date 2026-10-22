@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lexi's Projects</title>
+<meta name="description" content="Alexandria (Lexi) Loughlin: business analytics, strategy and research. M.S. Business Analytics candidate at SMU Cox.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+:root {
+  --bg: #fbf7f2;
+  --surface: #ffffff;
+  --ink: #1d2340;
+  --body: #3d4260;
+  --muted: #6e7290;
+  --line: #e8e1d8;
+  --rose: #c9576f;
+  --rose-soft: #f6dfe3;
+  --gold: #b9892f;
+  --gold-soft: #f4ead3;
+  --navy-soft: #e3e7f3;
+  --sage-soft: #e3eedb;
+  --sage: #4f7a3a;
+  --serif: "Fraunces", Georgia, serif;
+  --sans: "Inter", system-ui, -apple-system, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14172a; --surface: #1c2038; --ink: #f3eee8; --body: #cfd2e2; --muted: #9a9eb8; --line: #2d3252;
+    --rose: #ec8aa0; --rose-soft: #3a2433; --gold: #e2b867; --gold-soft: #3a3120; --navy-soft: #262b4a; --sage-soft: #24331f; --sage: #9cc67f;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14172a; --surface: #1c2038; --ink: #f3eee8; --body: #cfd2e2; --muted: #9a9eb8; --line: #2d3252;
+  --rose: #ec8aa0; --rose-soft: #3a2433; --gold: #e2b867; --gold-soft: #3a3120; --navy-soft: #262b4a; --sage-soft: #24331f; --sage: #9cc67f;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; animation: none !important; } }
+body { margin: 0; background: var(--bg); color: var(--body); font-family: var(--sans); font-size: 16px; line-height: 1.6; }
+a { color: var(--rose); text-underline-offset: 3px; }
+.wrap { max-width: 1040px; margin: 0 auto; padding: 0 max(20px, env(safe-area-inset-left, 0px)); }
+
+/* nav */
+nav { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; gap: 12px; }
+.mark { font-family: var(--serif); font-weight: 700; font-size: 20px; color: var(--ink); text-decoration: none; }
+.mark span { color: var(--rose); }
+.links { display: flex; gap: 22px; }
+.links a { color: var(--body); text-decoration: none; font-size: 14px; font-weight: 500; }
+.links a:hover { color: var(--rose); }
+@media (max-width: 720px) { .links { display: none; } }
+
+/* hero */
+.hero { padding: 72px 0 56px; display: grid; grid-template-columns: 1.4fr 1fr; gap: 48px; align-items: center; }
+@media (max-width: 820px) { .hero { grid-template-columns: 1fr; padding-top: 44px; gap: 32px; } }
+.eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); margin: 0 0 14px; }
+h1 { font-family: var(--serif); font-weight: 600; color: var(--ink); font-size: clamp(54px, 9vw, 92px); line-height: 1.02; margin: 0 0 18px; letter-spacing: -.01em; text-wrap: balance; }
+h1 em { font-style: italic; color: var(--rose); font-weight: 400; }
+.tagline { font-family: var(--serif); font-size: clamp(24px, 3.4vw, 32px); line-height: 1.28; color: var(--ink); margin: -2px 0 16px; max-width: 24ch; }
+.lede { font-size: 18px; max-width: 56ch; margin: 0 0 26px; }
+.ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; border-radius: 999px; font-weight: 600; font-size: 15px; text-decoration: none; border: 1.5px solid var(--ink); }
+.btn.primary { background: var(--ink); color: var(--bg); }
+.btn.ghost { color: var(--ink); }
+.btn:hover { transform: translateY(-1px); }
+
+.reel { position: relative; min-height: 400px; }
+.reel::before { content: ""; position: absolute; inset: 8% 6%; border-radius: 46% 54% 50% 50% / 52% 44% 56% 48%; background: linear-gradient(140deg, var(--rose-soft), var(--gold-soft) 60%, var(--navy-soft)); }
+.hcard { position: absolute; display: flex; gap: 12px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 12px 16px 12px 12px; box-shadow: 0 14px 34px rgba(29,35,64,.12); width: min(300px, 88%); animation: float 6s ease-in-out infinite; }
+.hcard b { display: block; color: var(--ink); font-family: var(--serif); font-size: 17px; line-height: 1.2; }
+.hcard span { font-size: 13px; color: var(--muted); line-height: 1.35; display: block; }
+.hi { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; font-size: 22px; flex: none; }
+.h1c { top: 2%; left: 0; transform: rotate(-3deg); }
+.h2c { top: 26%; right: 0; transform: rotate(2deg); animation-delay: -1.5s; }
+.h3c { top: 51%; left: 4%; transform: rotate(-1.5deg); animation-delay: -3s; }
+.h4c { top: 76%; right: 4%; transform: rotate(2.5deg); animation-delay: -4.5s; }
+@keyframes float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -8px; } }
+@media (max-width: 820px) { .reel { min-height: 0; display: flex; flex-direction: column; gap: 12px; } .reel::before { display: none; } .hcard { position: static; transform: none; width: 100%; animation: none; } }
+.eyebrow .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--sage); margin-right: 8px; vertical-align: 1px; box-shadow: 0 0 0 4px var(--sage-soft); }
+.hl { padding: 0 .12em; border-radius: 6px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.hl-rose { background: linear-gradient(transparent 55%, var(--rose-soft) 55%); }
+.hl-gold { background: linear-gradient(transparent 55%, var(--gold-soft) 55%); }
+.logos { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 28px; font-size: 13px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+.logos span + span::before { content: "·"; margin-right: 18px; color: var(--line); }
+.fit { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 30px; border-left: 6px solid var(--rose); }
+.avail { display: inline-flex; align-items: center; gap: 8px; background: var(--sage-soft); color: var(--sage); font-weight: 600; font-size: 14px; border-radius: 999px; padding: 6px 14px; }
+.avail .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sage); flex: none; }
+.seek-lead { font-family: var(--serif); font-size: clamp(24px, 3.2vw, 32px); color: var(--ink); line-height: 1.25; margin: 18px 0 14px; max-width: 30ch; }
+.seek-lead em { color: var(--rose); }
+.checks { list-style: none; padding: 0; margin: 0 0 18px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 24px; }
+@media (max-width: 700px) { .checks { grid-template-columns: 1fr; } }
+.checks li { position: relative; padding-left: 30px; }
+.checks li::before { content: "✓"; position: absolute; left: 0; top: 1px; width: 20px; height: 20px; border-radius: 50%; background: var(--rose-soft); color: var(--rose); font-size: 12px; font-weight: 700; display: grid; place-items: center; }
+.checks b { color: var(--ink); }
+.roles { display: flex; flex-wrap: wrap; gap: 8px; }
+.roles span { font-size: 13.5px; font-weight: 600; padding: 6px 12px; border-radius: 10px; background: var(--navy-soft); color: var(--ink); }
+.story { display: grid; grid-template-columns: 1.35fr 1fr; gap: 36px; align-items: start; }
+@media (max-width: 860px) { .story { grid-template-columns: 1fr; } }
+.story-text p { margin: 0 0 16px; font-size: 17px; max-width: 62ch; }
+.story-text b { color: var(--ink); }
+.story-lead { font-family: var(--serif); font-size: clamp(24px, 3vw, 30px) !important; line-height: 1.3; color: var(--ink); }
+.journey { list-style: none; margin: 0; padding: 24px; background: var(--surface); border: 1px solid var(--line); border-radius: 22px; position: relative; }
+.journey li { display: flex; gap: 14px; align-items: flex-start; position: relative; padding-bottom: 22px; }
+.journey li:last-child { padding-bottom: 0; }
+.journey li:not(:last-child)::after { content: ""; position: absolute; left: 21px; top: 46px; bottom: 2px; width: 2px; background: repeating-linear-gradient(var(--line) 0 5px, transparent 5px 9px); }
+.jdot { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-size: 20px; flex: none; border: 2px solid var(--surface); box-shadow: 0 0 0 1.5px var(--line); }
+.journey b { display: block; color: var(--ink); font-family: var(--serif); font-size: 18px; line-height: 1.2; margin-top: 2px; }
+.journey span { font-size: 14px; color: var(--muted); }
+.journey .now b { color: var(--rose); }
+.portrait { position: relative; aspect-ratio: 1; max-width: 360px; width: 100%; justify-self: center; }
+.portrait .blob { position: absolute; inset: 0; border-radius: 46% 54% 50% 50% / 52% 44% 56% 48%; background: linear-gradient(140deg, var(--rose-soft), var(--gold-soft) 60%, var(--navy-soft)); }
+.portrait .initials { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--serif); font-size: clamp(90px, 16vw, 140px); font-weight: 600; color: var(--ink); letter-spacing: -.04em; }
+.badge { position: absolute; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 10px 14px; box-shadow: 0 10px 30px rgba(29,35,64,.10); font-size: 13px; line-height: 1.35; }
+.badge b { display: block; color: var(--ink); font-size: 15px; }
+.badge.b1 { left: -6%; bottom: 14%; }
+.badge.b2 { right: -4%; top: 10%; }
+@media (max-width: 420px) { .badge.b1 { left: 0; } .badge.b2 { right: 0; } }
+
+/* stats */
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 72px; }
+@media (max-width: 760px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 20px; }
+.stat .n { font-family: var(--serif); font-size: 36px; font-weight: 600; color: var(--ink); line-height: 1; }
+.stat .l { font-size: 14px; color: var(--muted); margin-top: 8px; }
+.stat:nth-child(1) { border-top: 4px solid var(--rose); }
+.stat:nth-child(2) { border-top: 4px solid var(--gold); }
+.stat:nth-child(3) { border-top: 4px solid var(--sage); }
+.stat:nth-child(4) { border-top: 4px solid var(--ink); }
+
+/* sections */
+section { padding: 24px 0 64px; scroll-margin-top: 70px; }
+.sec-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 26px; }
+.sec-head .num { font-family: var(--serif); color: var(--gold); font-size: 18px; }
+h2 { font-family: var(--serif); font-weight: 600; color: var(--ink); font-size: clamp(30px, 4.5vw, 40px); margin: 0; letter-spacing: -.01em; }
+h3 { font-family: var(--serif); font-weight: 600; color: var(--ink); font-size: 21px; margin: 0 0 4px; line-height: 1.25; }
+
+/* featured project */
+.feature { display: grid; grid-template-columns: 1.1fr 1fr; gap: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 22px; overflow: hidden; margin-bottom: 18px; }
+@media (max-width: 820px) { .feature { grid-template-columns: 1fr; } }
+.feature .txt { padding: 30px; }
+.feature .viz { background: var(--navy-soft); padding: 26px; display: flex; flex-direction: column; justify-content: center; gap: 12px; }
+.tag { display: inline-block; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; margin: 0 6px 6px 0; }
+.t-rose { background: var(--rose-soft); color: var(--rose); }
+.t-gold { background: var(--gold-soft); color: var(--gold); }
+.t-sage { background: var(--sage-soft); color: var(--sage); }
+.t-navy { background: var(--navy-soft); color: var(--ink); }
+.kicker { font-size: 13px; color: var(--muted); font-weight: 600; margin-bottom: 10px; }
+.feature ul { padding-left: 18px; margin: 14px 0 0; }
+.feature li { margin-bottom: 6px; }
+.flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.flow div { background: var(--surface); border-radius: 12px; padding: 12px 8px; text-align: center; font-size: 12.5px; font-weight: 600; color: var(--ink); position: relative; border: 1px solid var(--line); }
+.flow div span { display: block; font-size: 22px; margin-bottom: 4px; }
+.depts { display: flex; flex-wrap: wrap; gap: 6px; }
+.depts span { background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: 12.5px; font-weight: 500; }
+.result { background: var(--surface); border-left: 4px solid var(--sage); border-radius: 10px; padding: 12px 14px; font-size: 14.5px; color: var(--ink); }
+
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 900px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 580px) { .grid { grid-template-columns: 1fr; } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 22px; display: flex; flex-direction: column; gap: 8px; }
+.card .icon { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; font-size: 21px; margin-bottom: 4px; }
+.card p { margin: 0; font-size: 15px; }
+
+/* timeline */
+.timeline { position: relative; padding-left: 28px; }
+.timeline::before { content: ""; position: absolute; left: 7px; top: 6px; bottom: 6px; width: 2px; background: var(--line); }
+.item { position: relative; padding-bottom: 28px; }
+.item::before { content: ""; position: absolute; left: -27px; top: 6px; width: 14px; height: 14px; border-radius: 50%; background: var(--bg); border: 3px solid var(--rose); }
+.item.gold::before { border-color: var(--gold); }
+.item.sage::before { border-color: var(--sage); }
+.item.navy::before { border-color: var(--ink); }
+.item .when { font-size: 13px; font-weight: 600; color: var(--muted); }
+.item .org { font-weight: 600; color: var(--body); margin-bottom: 6px; }
+.item p { margin: 0; max-width: 68ch; }
+
+/* skills */
+.skills { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 820px) { .skills { grid-template-columns: 1fr; } }
+.skillset { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 22px; }
+.skillset h3 { font-size: 18px; margin-bottom: 12px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips span { font-size: 13.5px; font-weight: 500; padding: 6px 12px; border-radius: 10px; background: var(--bg); border: 1px solid var(--line); color: var(--ink); }
+
+/* edu */
+.edu { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 680px) { .edu { grid-template-columns: 1fr; } }
+
+/* beyond */
+.beyond { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; }
+@media (max-width: 820px) { .beyond { grid-template-columns: 1fr; } }
+.ice { align-self: start; background: linear-gradient(150deg, var(--navy-soft), var(--surface)); border: 1px solid var(--line); border-radius: 22px; padding: 30px; position: relative; overflow: hidden; }
+.ice svg { position: absolute; right: -10px; bottom: -10px; width: 170px; opacity: .55; }
+.ice .big { font-family: var(--serif); font-size: 26px; color: var(--ink); line-height: 1.25; margin: 6px 0 12px; max-width: 22ch; }
+.stack { display: flex; flex-direction: column; gap: 16px; }
+
+.games { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
+@media (max-width: 580px) { .games { grid-template-columns: 1fr; } }
+.game { text-decoration: none; color: var(--ink); background: var(--rose-soft); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 6px; }
+.game:hover { outline: 2px solid var(--rose); }
+.game b { font-family: var(--serif); font-size: 18px; }
+.game span { font-size: 13px; color: var(--body); }
+.game canvas { width: 100%; height: 56px; }
+
+/* contact */
+.contact { background: var(--ink); color: var(--bg); border-radius: 26px; padding: 44px; text-align: center; margin-bottom: 40px; }
+.contact h2 { color: var(--bg); }
+.contact p { color: color-mix(in srgb, var(--bg) 80%, transparent); max-width: 52ch; margin: 12px auto 22px; }
+.contact .btn { border-color: var(--bg); color: var(--bg); }
+.contact .btn.primary { background: var(--bg); color: var(--ink); }
+footer { text-align: center; font-size: 13px; color: var(--muted); padding: 0 0 36px; }
+.theme { background: none; border: 1px solid var(--line); border-radius: 999px; width: 36px; height: 36px; cursor: pointer; color: var(--ink); font-size: 16px; }
+
+/* case study visuals */
+.kpi { background: var(--surface); border-radius: 14px; padding: 14px; border: 1px solid var(--line); }
+.kpi-label { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 10px; }
+.split { display: flex; height: 34px; border-radius: 10px; overflow: hidden; font-size: 13px; font-weight: 700; color: #fff; }
+.split div { display: flex; align-items: center; padding: 0 10px; white-space: nowrap; }
+.pareto { display: flex; flex-direction: column; gap: 8px; }
+.pareto > div { display: grid; grid-template-columns: 104px 1fr 42px; align-items: center; gap: 8px; font-size: 13px; }
+.pareto b { color: var(--ink); text-align: right; }
+.pbar { height: 12px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.pbar i { display: block; height: 100%; border-radius: 999px; }
+.donutrow { display: flex; align-items: center; gap: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+.donutrow p { margin: 0; font-size: 14.5px; color: var(--ink); }
+.donut { width: 92px; height: 92px; flex: none; }
+.donut text { font-family: var(--serif); font-size: 9px; font-weight: 700; fill: var(--ink); }
+.mini-dash { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.md-row { display: grid; grid-template-columns: 96px 1fr; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: var(--ink); }
+.note { font-size: 12px; color: var(--muted); margin: 0; }
+.feature { margin-bottom: 22px; }
+.filters { display: flex; gap: 8px; flex-wrap: wrap; margin: -8px 0 20px; }
+.fbtn { font: inherit; font-size: 14px; font-weight: 600; padding: 7px 16px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); color: var(--body); cursor: pointer; }
+.fbtn[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.card[hidden] { display: none; }
+.honors { margin-top: 16px; background: var(--gold-soft); color: var(--ink); border-radius: 14px; padding: 14px 18px; font-size: 15px; }
+
+.reveal { opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.in { opacity: 1; transform: none; }
+
+.fun-hero { padding: 60px 0 36px; text-align: center; }
+.fun-hero h1 { font-size: clamp(46px, 8vw, 80px); }
+.fun-hero p { font-size: 18px; max-width: 58ch; margin: 0 auto 10px; }
+.back { display: inline-block; margin: 26px 0 0; font-weight: 600; text-decoration: none; }
+.indie { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+@media (max-width: 900px) { .indie { grid-template-columns: 1fr; } }
+.icard { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; overflow: hidden; display: flex; flex-direction: column; }
+.ibanner { padding: 22px 24px; display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; min-height: 118px; }
+.ibanner .big { font-family: var(--serif); font-size: 40px; font-weight: 700; color: var(--ink); line-height: 1; }
+.ibanner .bl { font-size: 13px; font-weight: 600; color: var(--ink); opacity: .8; max-width: 16ch; text-align: right; }
+.ibody { padding: 20px 24px 24px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.ibody p { margin: 0; font-size: 15px; }
+.ibody ul { margin: 0; padding-left: 18px; font-size: 14.5px; }
+.ibody .ctas { margin-top: auto; padding-top: 6px; }
+.ibody .btn { padding: 9px 16px; font-size: 14px; }
+.wlist { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-bottom: 48px; }
+@media (max-width: 760px) { .wlist { grid-template-columns: 1fr; } }
+.wcard { text-decoration: none; color: inherit; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 22px; display: flex; gap: 16px; align-items: flex-start; }
+.wcard:hover { border-color: var(--rose); transform: translateY(-2px); }
+.wicon { width: 48px; height: 58px; border-radius: 8px; flex: none; display: grid; place-items: center; font-size: 11px; font-weight: 800; letter-spacing: .05em; color: #fff; position: relative; }
+.wicon::after { content: ""; position: absolute; top: 0; right: 0; border-width: 0 12px 12px 0; border-style: solid; border-color: var(--bg) var(--bg) rgba(0,0,0,.18) rgba(0,0,0,.18); }
+.wcard h3 { font-size: 20px; margin: 0 0 4px; }
+.wmeta { font-size: 13px; font-weight: 600; color: var(--muted); }
+.wcard p { margin: 6px 0 0; font-size: 15px; }
+.wempty { background: var(--surface); border: 1.5px dashed var(--line); border-radius: 18px; padding: 34px; text-align: center; color: var(--muted); grid-column: 1 / -1; }
+.wfilters { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin: 0 0 26px; }
+</style>
+</head>
+<body>
+<nav>
+  <div class="wrap">
+    <a class="mark" href="./">Lexi Loughlin<span>.</span></a>
+    <div class="links"><a href="./#story">About</a><a href="projects.html" style="color:var(--rose)">Projects</a><a href="writing.html">Writing</a><a href="fun.html">Fun stuff</a><a href="github.html">GitHub</a><a href="./#contact">Contact</a></div>
+    <button class="theme" id="theme" aria-label="Switch light or dark mode">◐</button>
+  </div>
+</nav>
+<main class="wrap">
+  <a class="back" href="./">← Back to portfolio</a>
+  <header class="fun-hero">
+    <p class="eyebrow">Projects</p>
+    <h1>Things I've <em>built</em></h1>
+    <p>Independent analytics projects with live code, plus the academic and client work behind my M.S. in Business Analytics.</p>
+  </header>
+
+  <section id="independent">
+    <div class="sec-head"><span class="num">01</span><h2>Independent projects</h2></div>
+    <div class="indie">
+      <article class="icard reveal">
+        <div class="ibanner" style="background:var(--gold-soft)"><div class="big">3.8M</div><div class="bl">monthly liquor sales filings, live from the state</div></div>
+        <div class="ibody">
+          <div class="kicker">Live dashboard · open data</div>
+          <h3>Last Call Texas</h3>
+          <div><span class="tag t-gold">JavaScript</span><span class="tag t-navy">Chart.js</span><span class="tag t-sage">Python</span><span class="tag t-rose">SoQL API</span></div>
+          <p>Which Texas bars sell the most alcohol? An interactive dashboard that queries the Texas Comptroller's open data live, by city and time period.</p>
+          <ul><li>Aggregates server-side so only summary rows download</li><li>Flags months as complete only once late filers catch up</li><li>Tracks the bar scene through COVID and the recovery</li></ul>
+          <div class="ctas"><a class="btn primary" href="https://lexiloughlin.github.io/last-call-texas/">Open dashboard →</a><a class="btn ghost" href="https://github.com/lexiloughlin/last-call-texas">Code</a></div>
+        </div>
+      </article>
+      <article class="icard reveal">
+        <div class="ibanner" style="background:var(--rose-soft)"><div class="big">0.49</div><div class="bl">AUC: proof the data needed fixing before modeling</div></div>
+        <div class="ibody">
+          <div class="kicker">Credit risk · Tata GenAI simulation</div>
+          <h3>Geldium delinquency risk</h3>
+          <div><span class="tag t-sage">Python</span><span class="tag t-navy">Statistics</span><span class="tag t-rose">GenAI</span></div>
+          <p>Audited a credit card dataset before anyone built a model on it. Found that missed payments contradicted payment history for 86% of customers.</p>
+          <ul><li>Leak-free baseline with SMOTE inside each fold</li><li>Rechecked every AI-generated claim, which overturned its first ranking</li><li>Recommended fixing the data before tuning models</li></ul>
+          <div class="ctas"><a class="btn primary" href="https://github.com/lexiloughlin/Tata-GenAI-Powered-Data-Analytics-project">See the analysis →</a></div>
+        </div>
+      </article>
+      <article class="icard reveal">
+        <div class="ibanner" style="background:var(--sage-soft)"><div class="big">5-yr</div><div class="bl">NPV, Monte Carlo and stage-gate plan</div></div>
+        <div class="ibody">
+          <div class="kicker">Research lab · food tech</div>
+          <h3>Printed Meat</h3>
+          <div><span class="tag t-sage">Python</span><span class="tag t-gold">Financial modeling</span><span class="tag t-navy">SQL</span><span class="tag t-rose">Research design</span></div>
+          <p>When does 3D-printed meat become a viable business? A reproducible research portfolio covering the technology, competition, manufacturing economics and demand.</p>
+          <ul><li>Unit economics, break-even and downside, base and upside cases</li><li>Claim-level source ledger and evidence audit</li><li>Designs buyer interviews, taste tests and price experiments</li></ul>
+          <div class="ctas"><a class="btn primary" href="https://github.com/lexiloughlin/printed-meat-research">See the research →</a></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="academic">
+    <div class="sec-head"><span class="num">02</span><h2>Academic & client projects</h2></div>
+    <div class="filters" role="group" aria-label="Filter projects">
+      <button class="fbtn" aria-pressed="true" data-f="all">All</button>
+      <button class="fbtn" aria-pressed="false" data-f="analytics">Analytics</button>
+      <button class="fbtn" aria-pressed="false" data-f="strategy">Strategy</button>
+      <button class="fbtn" aria-pressed="false" data-f="consulting">Consulting</button>
+      <button class="fbtn" aria-pressed="false" data-f="venture">Ventures</button>
+    </div>
+    <div class="grid" id="pgrid">
+      <article class="card reveal" data-cat="analytics">
+        <div class="icon" style="background:var(--navy-soft)">🎲</div>
+        <div class="kicker">Decision Modeling · Oct 2026</div>
+        <h3>Optimization & Monte Carlo models</h3>
+        <div><span class="tag t-navy">Excel Solver</span><span class="tag t-gold">Simulation</span></div>
+        <p>Linear and integer optimization for capital budgeting, supplier cost minimization and production planning, guided by sensitivity analysis and shadow prices. Decision trees and Monte Carlo simulations to test airline overbooking and seat pricing under uncertainty.</p>
+      </article>
+      <article class="card reveal" data-cat="strategy">
+        <div class="icon" style="background:var(--rose-soft)">💊</div>
+        <div class="kicker">Operations case</div>
+        <h3>Redesigning CVS prescription fulfillment</h3>
+        <div><span class="tag t-rose">Process redesign</span><span class="tag t-sage">Pilot planning</span></div>
+        <p>CVS lost about 7.2M regular pharmacy customers, worth an estimated $2.5B, largely to service problems. With 16% of prescriptions still unresolved at pickup, we proposed priority-based processing, earlier customer notifications and an 8-week pilot with defined metrics, while keeping every safety check intact.</p>
+      </article>
+      <article class="card reveal" data-cat="strategy">
+        <div class="icon" style="background:var(--gold-soft)">🚴</div>
+        <div class="kicker">Strategy analysis · team of 3</div>
+        <h3>Peloton: a path to recovery</h3>
+        <div><span class="tag t-gold">SWOT</span><span class="tag t-navy">Corporate strategy</span></div>
+        <p>Assessed Peloton's position after years of operating losses and a 98% stock decline. Recommended prioritizing free cash flow, continued restructuring, tiered app memberships, corporate wellness partnerships and controlled international expansion.</p>
+      </article>
+      <article class="card reveal" data-cat="venture">
+        <div class="icon" style="background:var(--sage-soft)">🐕</div>
+        <div class="kicker">Venture design · team of 4</div>
+        <h3>Dalis: fresh dog food for Mexico</h3>
+        <div><span class="tag t-sage">38 customer interviews</span><span class="tag t-rose">MVP</span></div>
+        <p>Interviews showed that price and switching risk keep owners on kibble, so we pivoted from a full replacement to a two-step ladder: a 50/50 "topper" plan that converts to full fresh. Added biweekly billing, a quiz-based landing page and a single-city launch in Mexico City.</p>
+      </article>
+      <article class="card reveal" data-cat="consulting">
+        <div class="icon" style="background:var(--navy-soft)">💡</div>
+        <div class="kicker">Client consulting engagement</div>
+        <h3>Nordco: digital turnaround</h3>
+        <div><span class="tag t-navy">Customer experience</span><span class="tag t-gold">SEO</span></div>
+        <p>On the customer experience team for an energy-efficient lighting company with an outdated, hard-to-find website. We rebuilt it mobile-first, sharpened the messaging and calls to action, set up Google Analytics and Search Console, and trained the client to run it themselves.</p>
+      </article>
+      <article class="card reveal" data-cat="strategy">
+        <div class="icon" style="background:var(--rose-soft)">🔄</div>
+        <div class="kicker">Organizational behavior · team of 5</div>
+        <h3>Beyond the holacracy hype</h3>
+        <div><span class="tag t-rose">Critical analysis</span><span class="tag t-navy">Org design</span></div>
+        <p>Critiqued Harvard's research on self-managing organizations through Zappos, where 18% of employees took a buyout rather than adopt holacracy. Argued that judging it on efficiency alone misses retention and quality of life, then offered recommendations.</p>
+      </article>
+      <article class="card reveal" data-cat="venture">
+        <div class="icon" style="background:var(--gold-soft)">🐾</div>
+        <div class="kicker">Entrepreneurship pitch</div>
+        <h3>Pony Up Pet Sitting</h3>
+        <div><span class="tag t-gold">Marketplace</span><span class="tag t-sage">Pitch</span></div>
+        <p>A pet care platform for SMU, staffed only by SMU students, matching a campus full of pet owners with students who want flexible work.</p>
+      </article>
+      <article class="card reveal" data-cat="analytics">
+        <div class="icon" style="background:var(--sage-soft)">🗄️</div>
+        <div class="kicker">SQL coursework</div>
+        <h3>SQL across real datasets</h3>
+        <div><span class="tag t-navy">SQL</span><span class="tag t-sage">DataCamp</span></div>
+        <p>Queried OpenFlights, IMDB, Northwind, Dallas restaurant inspections and DCAD real estate records as part of SQL coursework and DataCamp's Data Analyst Associate track.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="files">
+    <div class="sec-head"><span class="num">03</span><h2>Project files</h2></div>
+    <p class="small-note" style="margin:-10px 0 20px;color:var(--muted)">Decks, reports and write-ups.</p>
+    <div class="wfilters" id="wfilters" role="group" aria-label="Filter files"></div>
+    <div class="wlist" id="wlist"><div class="wempty">Loading…</div></div>
+  </section>
+</main>
+<footer>© <span id="yr"></span> Alexandria Loughlin · <a href="./">Back to portfolio</a></footer>
+<script>
+(() => {
+  // Lists every file in the repo's projects/ folder. Optional details come from projects/pieces.json.
+  const REPO = 'lexiloughlin/lexiloughlin.github.io';
+  const TYPES = { pdf: ['PDF', '#c9576f'], docx: ['DOC', '#3c5aa8'], doc: ['DOC', '#3c5aa8'], md: ['TXT', '#4f7a3a'], txt: ['TXT', '#4f7a3a'], html: ['WEB', '#b9892f'], pptx: ['PPT', '#d0742c'] };
+  const list = document.getElementById('wlist'), filters = document.getElementById('wfilters');
+  const pretty = n => n.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim().replace(/\b\w/g, ch => ch.toUpperCase());
+  const esc = t => String(t || '').replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+  let items = [];
+  function render(cat) {
+    const shown = items.filter(i => cat === 'All' || i.category === cat);
+    list.innerHTML = shown.length ? shown.map(i => {
+      const [lbl, col] = TYPES[i.ext] || ['FILE', '#6e7290'];
+      return `<a class="wcard reveal in" href="${esc(i.url)}" target="_blank" rel="noopener">
+        <div class="wicon" style="background:${col}">${lbl}</div>
+        <div><div class="wmeta">${esc([i.category, i.outlet, i.date].filter(Boolean).join(' · '))}</div>
+        <h3>${esc(i.title)}</h3>${i.summary ? `<p>${esc(i.summary)}</p>` : ''}</div></a>`;
+    }).join('') : '<div class="wempty">More project files are on the way.</div>';
+  }
+  function buildFilters() {
+    const cats = ['All', ...new Set(items.map(i => i.category).filter(Boolean))];
+    if (cats.length < 3) { filters.hidden = true; return; }
+    filters.innerHTML = cats.map((c, k) => `<button class="fbtn" aria-pressed="${k ? 'false' : 'true'}" data-c="${esc(c)}">${esc(c)}</button>`).join('');
+    filters.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+      filters.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false')); render(b.dataset.c);
+    }));
+  }
+  Promise.all([
+    fetch(`https://api.github.com/repos/${REPO}/contents/projects`).then(r => r.ok ? r.json() : []).catch(() => []),
+    fetch('projects/pieces.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
+  ]).then(([files, meta]) => {
+    const extra = Array.isArray(meta.links) ? meta.links : [];
+    const details = meta.files || {};
+    items = (Array.isArray(files) ? files : [])
+      .filter(f => f.type === 'file' && !/^(readme\.md|pieces\.json)$/i.test(f.name) && !f.name.startsWith('.'))
+      .map(f => {
+        const d = details[f.name] || {};
+        return { title: d.title || pretty(f.name), category: d.category || '', outlet: d.outlet || '', date: d.date || '', summary: d.summary || '', ext: f.name.split('.').pop().toLowerCase(), url: 'projects/' + encodeURIComponent(f.name), order: d.order ?? 999 };
+      })
+      .concat(extra.map(l => ({ ...l, ext: 'html', order: l.order ?? 999 })))
+      .sort((a, b) => a.order - b.order || String(b.date).localeCompare(String(a.date)) || a.title.localeCompare(b.title));
+    buildFilters(); render('All');
+  });
+})();
+</script><script>
+(() => {
+  document.getElementById('yr').textContent = new Date().getFullYear();
+  // theme toggle
+  const root = document.documentElement, btn = document.getElementById('theme');
+  try { const t = localStorage.getItem('ll-theme'); if (t) root.dataset.theme = t; } catch (e) {}
+  btn.addEventListener('click', () => {
+    const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    root.dataset.theme = dark ? 'light' : 'dark';
+    try { localStorage.setItem('ll-theme', root.dataset.theme); } catch (e) {}
+  });
+  // reveal on scroll
+  const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .12 }) : null;
+  document.querySelectorAll('.reveal').forEach(el => io ? io.observe(el) : el.classList.add('in'));
+
+  // project filters
+  const fbtns = document.querySelectorAll('.fbtn');
+  fbtns.forEach(b => b.addEventListener('click', () => {
+    fbtns.forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+    document.querySelectorAll('#pgrid .card').forEach(card => { card.hidden = b.dataset.f !== 'all' && card.dataset.cat !== b.dataset.f; if (!card.hidden) card.classList.add('in'); });
+  }));
+  // little pig portraits on the game cards
+  const WHITE = '#fbf6ee', INK = '#3b2a1a';
+  const SKINS = [
+    { base: '#c96d2c', rear: '#3d271b', eyePatch: '#3d271b', blaze: WHITE, chin: WHITE, ear: '#e0a08a' },
+    { base: '#1e1b20', fluffy: true, ear: '#3c3438', dark: true, nose: '#5a4048' },
+    { base: '#d27b2f', band: WHITE, head: '#221915', chin: WHITE, ear: '#7b5236', dark: true },
+    { base: '#201b1c', band: WHITE, cheek: '#c9752f', ear: '#3a2f2c', dark: true },
+    { base: '#2b3552', head: '#e6b866', suit: true, ear: '#d48f72', nose: '#d97b7b', glasses: true }
+  ];
+  function ell(c, x, y, rx, ry, rot = 0) { c.beginPath(); c.ellipse(x, y, rx, ry, rot, 0, Math.PI * 2); }
+
+  // Side-view pig, origin at body centre, facing right. ~72 x 46 units.
+  function drawPig(c, skin, o = {}) {
+    const chew = o.chew || 0;
+    c.lineJoin = 'round';
+    c.fillStyle = '#f0b3a6';
+    for (const fx of [-20, 18]) { ell(c, fx, 19, 6, 3.5); c.fill(); c.lineWidth = 1.5; c.strokeStyle = INK; c.stroke(); }
+    const body = new Path2D(); body.ellipse(0, 0, 36, 22, 0, 0, Math.PI * 2);
+    if (skin.fluffy) {
+      const fur = new Path2D();
+      for (let i = 0; i <= 44; i++) {
+        const a = i / 44 * Math.PI * 2, k = i % 2 ? 1.0 : 1.12;
+        const px = Math.cos(a) * 36 * k, py = Math.sin(a) * 22 * k;
+        i ? fur.lineTo(px, py) : fur.moveTo(px, py);
+      }
+      fur.closePath();
+      c.fillStyle = skin.base; c.fill(fur); c.lineWidth = 2.2; c.strokeStyle = INK; c.stroke(fur);
+    }
+    c.fillStyle = skin.base; c.fill(body);
+    c.save(); c.clip(body);
+    if (skin.rear) { c.fillStyle = skin.rear; ell(c, -26, 0, 26, 28); c.fill(); }
+    if (skin.band) { c.fillStyle = skin.band; c.fillRect(-3, -30, 15, 60); }
+    if (skin.head) { c.fillStyle = skin.head; ell(c, 27, -2, 17, 26); c.fill(); }
+    if (skin.suit) {
+      // pinstripes
+      c.strokeStyle = 'rgba(255,255,255,.13)'; c.lineWidth = 1;
+      for (let x = -36; x < 12; x += 6) { c.beginPath(); c.moveTo(x, -24); c.lineTo(x, 24); c.stroke(); }
+      // shirt V + lapels + red tie at the collar
+      c.fillStyle = '#fff'; c.beginPath(); c.moveTo(7, -18); c.lineTo(13, 10); c.lineTo(17, -18); c.closePath(); c.fill();
+      c.fillStyle = '#1d2540'; c.beginPath(); c.moveTo(4, -18); c.lineTo(11, 4); c.lineTo(7, -18); c.closePath(); c.fill();
+      c.fillStyle = '#c8343c'; c.beginPath(); c.moveTo(11, -16); c.lineTo(14, -16); c.lineTo(15, 2); c.lineTo(12.5, 6); c.lineTo(10, 2); c.closePath(); c.fill();
+    }
+    if (skin.cheek) { c.fillStyle = skin.cheek; ell(c, 31, 4, 10, 9); c.fill(); }
+    if (skin.eyePatch) { c.fillStyle = skin.eyePatch; ell(c, 23, -6, 9, 9.5); c.fill(); }
+    if (skin.blaze) { c.fillStyle = skin.blaze; ell(c, 29, -12, 13, 4.5, 0.55); c.fill(); }
+    if (skin.chin) { c.fillStyle = skin.chin; ell(c, 33, 9, 7.5, 6.5); c.fill(); }
+    c.restore();
+    if (!skin.fluffy) { c.lineWidth = 2.5; c.strokeStyle = INK; c.stroke(body); }
+    c.fillStyle = skin.ear; ell(c, 17, -18, 7, 5, -0.5); c.fill(); c.lineWidth = 2; c.strokeStyle = INK; c.stroke();
+    if (o.sad) {
+      c.beginPath(); c.moveTo(21, -10); c.lineTo(28, -4); c.moveTo(21, -4); c.lineTo(28, -10);
+      c.lineWidth = 2; c.strokeStyle = skin.dark ? '#fff' : INK; c.stroke();
+    } else {
+      c.fillStyle = '#0b0809'; ell(c, 24.5, -7, 3.6, 3.6); c.fill();
+      if (skin.dark) { c.lineWidth = 1; c.strokeStyle = '#6b5a5f'; c.stroke(); }
+      c.fillStyle = '#fff'; ell(c, 25.8, -8.3, 1.3, 1.3); c.fill();
+    }
+    if (skin.glasses && !o.sad) {
+      c.lineWidth = 1.4; c.strokeStyle = INK;
+      ell(c, 24.5, -7, 5.2, 5.2); c.stroke();
+      c.beginPath(); c.moveTo(19.3, -7); c.lineTo(13, -9); c.stroke();
+    }
+    c.fillStyle = skin.nose || '#e07a7a'; ell(c, 35.5, 1, 2.8, 2.2); c.fill();
+    c.beginPath(); c.moveTo(33.5, 4.5); c.quadraticCurveTo(31.5, 8 + chew, 28.5, 7);
+    c.lineWidth = 1.5; c.strokeStyle = skin.dark ? '#9a8a8f' : INK; c.stroke();
+    c.beginPath(); c.moveTo(33, 0); c.lineTo(45, -3); c.moveTo(33, 2); c.lineTo(45, 4);
+    c.lineWidth = 1; c.strokeStyle = skin.dark ? '#cfc6c8' : INK; c.stroke();
+    if (!skin.dark) { c.fillStyle = 'rgba(240,130,130,.4)'; ell(c, 22, 4, 5, 3); c.fill(); }
+  }
+
+  function drawPoop(c, x, y, a, s = 1) {
+    c.save(); c.translate(x, y); c.rotate(a); c.scale(s, s);
+    c.fillStyle = '#4a3020'; ell(c, 0, 0, 3, 1.7); c.fill();
+    c.fillStyle = 'rgba(255,255,255,.35)'; ell(c, -0.8, -0.6, 1, .45); c.fill();
+    c.restore();
+  }
+  document.querySelectorAll('canvas[data-pig]').forEach(cv => {
+    const c = cv.getContext('2d'), w = cv.width, h = cv.height, k = Math.min(h / 112 * 1.7, w / 100); c.translate(w / 2, h * .52); c.scale(k, k); drawPig(c, SKINS[+cv.dataset.pig]);
+  });
+})();
+</script>
+</body>
+</html>
