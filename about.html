@@ -302,11 +302,11 @@ footer { text-align: center; font-size: 13px; color: var(--muted); padding: 0 0 
 
 .ab-hero { max-width: 820px; margin: 0 auto; padding: 56px 0 30px; }
 .ab-hero h1 { font-size: clamp(44px, 7.5vw, 84px); line-height: 1.02; margin-bottom: 22px; }
-.many { list-style: none; padding: 0; margin: 0 0 26px; display: flex; flex-wrap: wrap; gap: 4px 18px; font-family: var(--serif); font-size: clamp(24px, 3.6vw, 36px); font-weight: 600; line-height: 1.2; }
+.many { list-style: none; padding: 0; margin: 0 0 26px; display: flex; flex-wrap: wrap; gap: 4px 18px; color: var(--ink); font-family: var(--serif); font-size: clamp(24px, 3.6vw, 36px); font-weight: 600; line-height: 1.2; }
 .many em { font-weight: 400; }
 .ab-intro { font-size: 20px; line-height: 1.6; max-width: 60ch; margin: 0; }
-.band { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 40px; padding: 22px 20px; margin: 30px calc(50% - 50vw) 10px; background: linear-gradient(90deg, var(--rose-soft), var(--gold-soft), var(--sage-soft), var(--navy-soft)); font-size: 15px; color: var(--ink); font-weight: 600; }
-.band b { font-family: var(--serif); font-size: 26px; margin-right: 6px; vertical-align: -3px; }
+.band { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 40px; padding: 22px 20px; margin: 30px calc(50% - 50vw) 10px; background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); font-size: 15px; color: var(--ink); font-weight: 600; }
+.band b { color: var(--rose); font-family: var(--serif); font-size: 26px; margin-right: 6px; vertical-align: -3px; }
 .chapters { max-width: 720px; margin: 0 auto; padding: 30px 0 20px; }
 .chapter { padding: 40px 0; border-bottom: 1px solid var(--line); }
 .chapter:last-child { border-bottom: 0; }
@@ -340,15 +340,13 @@ footer { text-align: center; font-size: 13px; color: var(--muted); padding: 0 0 
   <div id="aboutView">
   <header class="ab-hero">
     <p class="eyebrow">About me</p>
-    <h1>I've always been <em>a lot</em> of things.</h1>
-    <ul class="many" aria-label="Some of the things I am">
-      <li style="color:var(--rose)">Ice dancer.</li>
-      <li style="color:var(--gold)">Broadway kid.</li>
-      <li style="color:var(--sage)">Painter.</li>
-      <li style="color:var(--ink)">Analyst.</li>
-      <li style="color:var(--rose)"><em>Builder.</em></li>
+    <h1>I've always been a <em>learner.</em></h1>
+    <ul class="many" aria-label="What I love to do">
+      <li>Learn.</li>
+      <li>Create.</li>
+      <li style="color:var(--rose)"><em>Explore.</em></li>
     </ul>
-    <p class="ab-intro">I grew up in New Jersey, spent my teens competing for Azerbaijan on the ice, and landed in Dallas with a habit of going all the way into whatever I love. This is the version of me that doesn't fit on a resume.</p>
+    <p class="ab-intro">I love picking up something new and going all the way into it. That curiosity took me from skating in New Jersey, to competing for Azerbaijan, to business analytics at SMU Cox in Dallas. This is the version of me that doesn't fit on a resume.</p>
   </header>
 
   <div class="band reveal"><span><b>7</b> countries competed in</span><span><b>3</b> languages</span><span><b>1</b> World Championships</span><span><b>4</b> guinea pigs</span></div>
@@ -363,7 +361,7 @@ footer { text-align: center; font-size: 13px; color: var(--muted); padding: 0 0 
 
     <section class="chapter reveal">
       <div class="ch-label" style="color:var(--gold)"><span>02</span>On stage</div>
-      <p>Before and after the ice, there was dance. I trained in ballet and a handful of other styles, and I'm happiest singing Broadway songs a little too loudly. Stage over screen, always. There's nothing like the feeling of something you've practiced a hundred times landing exactly right in front of an audience.</p>
+      <p>Before and after the ice, there was dance. I trained in ballet and a handful of other styles, and I love singing and performing. Stage over screen, always. There's nothing like the feeling of something you've practiced a hundred times landing exactly right in front of an audience.</p>
     </section>
 
     <section class="chapter reveal">
