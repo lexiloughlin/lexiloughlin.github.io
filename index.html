@@ -99,6 +99,19 @@ h1 em { font-style: italic; color: var(--rose); font-weight: 400; }
 .checks b { color: var(--ink); }
 .roles { display: flex; flex-wrap: wrap; gap: 8px; }
 .roles span { font-size: 13.5px; font-weight: 600; padding: 6px 12px; border-radius: 10px; background: var(--navy-soft); color: var(--ink); }
+.story { display: grid; grid-template-columns: 1.35fr 1fr; gap: 36px; align-items: start; }
+@media (max-width: 860px) { .story { grid-template-columns: 1fr; } }
+.story-text p { margin: 0 0 16px; font-size: 17px; max-width: 62ch; }
+.story-text b { color: var(--ink); }
+.story-lead { font-family: var(--serif); font-size: clamp(24px, 3vw, 30px) !important; line-height: 1.3; color: var(--ink); }
+.journey { list-style: none; margin: 0; padding: 24px; background: var(--surface); border: 1px solid var(--line); border-radius: 22px; position: relative; }
+.journey li { display: flex; gap: 14px; align-items: flex-start; position: relative; padding-bottom: 22px; }
+.journey li:last-child { padding-bottom: 0; }
+.journey li:not(:last-child)::after { content: ""; position: absolute; left: 21px; top: 46px; bottom: 2px; width: 2px; background: repeating-linear-gradient(var(--line) 0 5px, transparent 5px 9px); }
+.jdot { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-size: 20px; flex: none; border: 2px solid var(--surface); box-shadow: 0 0 0 1.5px var(--line); }
+.journey b { display: block; color: var(--ink); font-family: var(--serif); font-size: 18px; line-height: 1.2; margin-top: 2px; }
+.journey span { font-size: 14px; color: var(--muted); }
+.journey .now b { color: var(--rose); }
 .portrait { position: relative; aspect-ratio: 1; max-width: 360px; width: 100%; justify-self: center; }
 .portrait .blob { position: absolute; inset: 0; border-radius: 46% 54% 50% 50% / 52% 44% 56% 48%; background: linear-gradient(140deg, var(--rose-soft), var(--gold-soft) 60%, var(--navy-soft)); }
 .portrait .initials { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--serif); font-size: clamp(90px, 16vw, 140px); font-weight: 600; color: var(--ink); letter-spacing: -.04em; }
@@ -236,7 +249,7 @@ footer { text-align: center; font-size: 13px; color: var(--muted); padding: 0 0 
   <div class="wrap">
     <a class="mark" href="#top">Lexi Loughlin<span>.</span></a>
     <div class="links">
-      <a href="#about">About</a><a href="#work">Case studies</a><a href="#projects">Projects</a><a href="#experience">Experience</a><a href="#skills">Skills</a><a href="#contact">Contact</a>
+      <a href="#story">About</a><a href="#work">Case studies</a><a href="#projects">Projects</a><a href="#experience">Experience</a><a href="#skills">Skills</a><a href="#contact">Contact</a>
     </div>
     <button class="theme" id="theme" aria-label="Switch light or dark mode">◐</button>
   </div>
@@ -248,10 +261,10 @@ footer { text-align: center; font-size: 13px; color: var(--muted); padding: 0 0 
       <p class="eyebrow"><span class="dot"></span>M.S. Business Analytics · SMU Cox '27</p>
       <h1>Hi, I'm <em>Lexi!</em></h1>
       <p class="tagline">I went from the <span class="hl hl-rose">World Championships</span> to decoding <span class="hl hl-gold">$29 billion</span> in airline data.</p>
-      <p class="lede">Now I find the signal in messy data and turn it into moves leaders actually make, across energy, aviation and global trade.</p>
+      <p class="lede">I grew up in New Jersey, spent my teens competing in ice dance for Azerbaijan, and now study business analytics at SMU Cox in Dallas. I find the signal in messy data and turn it into moves leaders actually make.</p>
       <div class="ctas">
         <a class="btn primary" href="#work">See my work →</a>
-        <a class="btn ghost" href="#contact">Get in touch</a>
+        <a class="btn ghost" href="#story">My story ↓</a>
       </div>
       <div class="logos" aria-label="Where I've worked and studied">
         <span>BKV Energy</span><span>ODI London</span><span>SMU Cox</span><span>Team Azerbaijan</span>
@@ -265,8 +278,29 @@ footer { text-align: center; font-size: 13px; color: var(--muted); padding: 0 0 
     </div>
   </header>
 
+  <section id="story">
+    <div class="sec-head"><span class="num">01</span><h2>My story</h2></div>
+    <div class="story">
+      <div class="story-text reveal">
+        <p class="story-lead">I've always been drawn to the details other people skip over.</p>
+        <p>I started skating as a kid in New Jersey. As a teenager I moved abroad to compete for <b>Azerbaijan's senior national ice dance team</b>, training in Minsk, learning Russian, and handling the visas and travel for my partner and me. We became the country's top team and qualified for the World Championships.</p>
+        <p>Ice dance taught me how much hides in the details. Nine judges scored every element, and placements came down to hundredths of a point, so I studied the scoring data to see exactly where we were losing points. We raised our total score by 10 points in our final season, and the habit of digging into the numbers stuck.</p>
+        <p>At <b>SMU Cox</b> I studied marketing and finance with a psychology minor, because I wanted to understand both the numbers and the people behind them. That path took me to economic policy research in <b>London</b>, analytics at <b>BKV Energy</b>, and now an <b>M.S. in Business Analytics</b>.</p>
+        <p>Outside work I paint, sing and dance (Broadway is my weakness), and build little browser games starring my four guinea pigs.</p>
+      </div>
+      <ol class="journey reveal" aria-label="My path">
+        <li><span class="jdot" style="background:var(--rose-soft)">🏠</span><div><b>New Jersey</b><span>Where it started, on the ice as a kid</span></div></li>
+        <li><span class="jdot" style="background:var(--navy-soft)">⛸️</span><div><b>Minsk, Belarus</b><span>Team Azerbaijan · 2019 to 2022 · 7 countries</span></div></li>
+        <li><span class="jdot" style="background:var(--gold-soft)">🎓</span><div><b>Dallas</b><span>BBA at SMU Cox · marketing, finance, psychology</span></div></li>
+        <li><span class="jdot" style="background:var(--sage-soft)">🇬🇧</span><div><b>London</b><span>Overseas Development Institute · 2024</span></div></li>
+        <li><span class="jdot" style="background:var(--gold-soft)">⚡</span><div><b>Dallas</b><span>BKV Energy · analytics intern · 2026</span></div></li>
+        <li class="now"><span class="jdot" style="background:var(--rose)">📊</span><div><b>Now</b><span>M.S. Business Analytics, SMU Cox · May 2027</span></div></li>
+      </ol>
+    </div>
+  </section>
+
   <section id="about">
-    <div class="sec-head"><span class="num">01</span><h2>What I'm looking for</h2></div>
+    <div class="sec-head"><span class="num">02</span><h2>What I'm looking for</h2></div>
     <div class="fit reveal">
       <div class="seek">
         <div class="avail"><span class="dot"></span>Available for a co-op from January 2027 and full-time after May 2027 · Dallas, TX</div>
@@ -283,7 +317,7 @@ footer { text-align: center; font-size: 13px; color: var(--muted); padding: 0 0 
   </section>
 
   <section id="strengths">
-    <div class="sec-head"><span class="num">02</span><h2>What I'm good at</h2></div>
+    <div class="sec-head"><span class="num">03</span><h2>What I'm good at</h2></div>
     <div class="grid strengths">
       <article class="card reveal">
         <div class="icon" style="background:var(--rose-soft)">🔎</div>
@@ -319,7 +353,7 @@ footer { text-align: center; font-size: 13px; color: var(--muted); padding: 0 0 
   </section>
 
   <section id="work">
-    <div class="sec-head"><span class="num">02</span><h2>Case studies</h2></div>
+    <div class="sec-head"><span class="num">03</span><h2>Case studies</h2></div>
 
     <article class="feature reveal">
       <div class="txt">
@@ -395,7 +429,7 @@ footer { text-align: center; font-size: 13px; color: var(--muted); padding: 0 0 
   </section>
 
   <section id="projects">
-    <div class="sec-head"><span class="num">03</span><h2>Academic projects</h2></div>
+    <div class="sec-head"><span class="num">04</span><h2>Academic projects</h2></div>
     <div class="filters" role="group" aria-label="Filter projects">
       <button class="fbtn" aria-pressed="true" data-f="all">All</button>
       <button class="fbtn" aria-pressed="false" data-f="analytics">Analytics</button>
@@ -464,7 +498,7 @@ footer { text-align: center; font-size: 13px; color: var(--muted); padding: 0 0 
   </section>
 
   <section id="experience">
-    <div class="sec-head"><span class="num">04</span><h2>Experience</h2></div>
+    <div class="sec-head"><span class="num">05</span><h2>Experience</h2></div>
     <div class="timeline">
       <div class="item reveal">
         <div class="when">Summer 2026 · Dallas, TX</div>
@@ -500,7 +534,7 @@ footer { text-align: center; font-size: 13px; color: var(--muted); padding: 0 0 
   </section>
 
   <section id="skills">
-    <div class="sec-head"><span class="num">05</span><h2>Skills</h2></div>
+    <div class="sec-head"><span class="num">06</span><h2>Skills</h2></div>
     <div class="skills">
       <div class="skillset reveal">
         <h3>📊 Tools</h3>
@@ -518,7 +552,7 @@ footer { text-align: center; font-size: 13px; color: var(--muted); padding: 0 0 
   </section>
 
   <section id="education">
-    <div class="sec-head"><span class="num">06</span><h2>Education</h2></div>
+    <div class="sec-head"><span class="num">07</span><h2>Education</h2></div>
     <div class="edu">
       <div class="card reveal">
         <div class="icon" style="background:var(--navy-soft)">🎓</div>
@@ -537,7 +571,7 @@ footer { text-align: center; font-size: 13px; color: var(--muted); padding: 0 0 
   </section>
 
   <section id="beyond">
-    <div class="sec-head"><span class="num">07</span><h2>Beyond work</h2></div>
+    <div class="sec-head"><span class="num">08</span><h2>Beyond work</h2></div>
     <div class="beyond">
       <div class="ice reveal">
         <div class="kicker">Before business school</div>
