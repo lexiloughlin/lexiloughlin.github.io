@@ -1,0 +1,685 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lexi Loughlin · Portfolio</title>
+<meta name="description" content="Alexandria (Lexi) Loughlin: business analytics, strategy and research. M.S. Business Analytics candidate at SMU Cox.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+:root {
+  --bg: #fbf7f2;
+  --surface: #ffffff;
+  --ink: #1d2340;
+  --body: #3d4260;
+  --muted: #6e7290;
+  --line: #e8e1d8;
+  --rose: #c9576f;
+  --rose-soft: #f6dfe3;
+  --gold: #b9892f;
+  --gold-soft: #f4ead3;
+  --navy-soft: #e3e7f3;
+  --sage-soft: #e3eedb;
+  --sage: #4f7a3a;
+  --serif: "Fraunces", Georgia, serif;
+  --sans: "Inter", system-ui, -apple-system, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14172a; --surface: #1c2038; --ink: #f3eee8; --body: #cfd2e2; --muted: #9a9eb8; --line: #2d3252;
+    --rose: #ec8aa0; --rose-soft: #3a2433; --gold: #e2b867; --gold-soft: #3a3120; --navy-soft: #262b4a; --sage-soft: #24331f; --sage: #9cc67f;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14172a; --surface: #1c2038; --ink: #f3eee8; --body: #cfd2e2; --muted: #9a9eb8; --line: #2d3252;
+  --rose: #ec8aa0; --rose-soft: #3a2433; --gold: #e2b867; --gold-soft: #3a3120; --navy-soft: #262b4a; --sage-soft: #24331f; --sage: #9cc67f;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; animation: none !important; } }
+body { margin: 0; background: var(--bg); color: var(--body); font-family: var(--sans); font-size: 16px; line-height: 1.6; }
+a { color: var(--rose); text-underline-offset: 3px; }
+.wrap { max-width: 1040px; margin: 0 auto; padding: 0 max(20px, env(safe-area-inset-left, 0px)); }
+
+/* nav */
+nav { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; gap: 12px; }
+.mark { font-family: var(--serif); font-weight: 700; font-size: 20px; color: var(--ink); text-decoration: none; }
+.mark span { color: var(--rose); }
+.links { display: flex; gap: 22px; }
+.links a { color: var(--body); text-decoration: none; font-size: 14px; font-weight: 500; }
+.links a:hover { color: var(--rose); }
+@media (max-width: 720px) { .links { display: none; } }
+
+/* hero */
+.hero { padding: 72px 0 56px; display: grid; grid-template-columns: 1.4fr 1fr; gap: 48px; align-items: center; }
+@media (max-width: 820px) { .hero { grid-template-columns: 1fr; padding-top: 44px; gap: 32px; } }
+.eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); margin: 0 0 14px; }
+h1 { font-family: var(--serif); font-weight: 600; color: var(--ink); font-size: clamp(54px, 9vw, 92px); line-height: 1.02; margin: 0 0 18px; letter-spacing: -.01em; text-wrap: balance; }
+h1 em { font-style: italic; color: var(--rose); font-weight: 400; }
+.tagline { font-family: var(--serif); font-size: clamp(24px, 3.4vw, 32px); line-height: 1.28; color: var(--ink); margin: -2px 0 16px; max-width: 24ch; }
+.lede { font-size: 18px; max-width: 56ch; margin: 0 0 26px; }
+.ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; border-radius: 999px; font-weight: 600; font-size: 15px; text-decoration: none; border: 1.5px solid var(--ink); }
+.btn.primary { background: var(--ink); color: var(--bg); }
+.btn.ghost { color: var(--ink); }
+.btn:hover { transform: translateY(-1px); }
+
+.reel { position: relative; min-height: 400px; }
+.reel::before { content: ""; position: absolute; inset: 8% 6%; border-radius: 46% 54% 50% 50% / 52% 44% 56% 48%; background: linear-gradient(140deg, var(--rose-soft), var(--gold-soft) 60%, var(--navy-soft)); }
+.hcard { position: absolute; display: flex; gap: 12px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 12px 16px 12px 12px; box-shadow: 0 14px 34px rgba(29,35,64,.12); width: min(300px, 88%); animation: float 6s ease-in-out infinite; }
+.hcard b { display: block; color: var(--ink); font-family: var(--serif); font-size: 17px; line-height: 1.2; }
+.hcard span { font-size: 13px; color: var(--muted); line-height: 1.35; display: block; }
+.hi { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; font-size: 22px; flex: none; }
+.h1c { top: 2%; left: 0; transform: rotate(-3deg); }
+.h2c { top: 26%; right: 0; transform: rotate(2deg); animation-delay: -1.5s; }
+.h3c { top: 51%; left: 4%; transform: rotate(-1.5deg); animation-delay: -3s; }
+.h4c { top: 76%; right: 4%; transform: rotate(2.5deg); animation-delay: -4.5s; }
+@keyframes float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -8px; } }
+@media (max-width: 820px) { .reel { min-height: 0; display: flex; flex-direction: column; gap: 12px; } .reel::before { display: none; } .hcard { position: static; transform: none; width: 100%; animation: none; } }
+.eyebrow .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--sage); margin-right: 8px; vertical-align: 1px; box-shadow: 0 0 0 4px var(--sage-soft); }
+.hl { padding: 0 .12em; border-radius: 6px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.hl-rose { background: linear-gradient(transparent 55%, var(--rose-soft) 55%); }
+.hl-gold { background: linear-gradient(transparent 55%, var(--gold-soft) 55%); }
+.logos { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 28px; font-size: 13px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+.logos span + span::before { content: "·"; margin-right: 18px; color: var(--line); }
+.fit { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 30px; border-left: 6px solid var(--rose); }
+.avail { display: inline-flex; align-items: center; gap: 8px; background: var(--sage-soft); color: var(--sage); font-weight: 600; font-size: 14px; border-radius: 999px; padding: 6px 14px; }
+.avail .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sage); flex: none; }
+.seek-lead { font-family: var(--serif); font-size: clamp(24px, 3.2vw, 32px); color: var(--ink); line-height: 1.25; margin: 18px 0 14px; max-width: 30ch; }
+.seek-lead em { color: var(--rose); }
+.checks { list-style: none; padding: 0; margin: 0 0 18px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 24px; }
+@media (max-width: 700px) { .checks { grid-template-columns: 1fr; } }
+.checks li { position: relative; padding-left: 30px; }
+.checks li::before { content: "✓"; position: absolute; left: 0; top: 1px; width: 20px; height: 20px; border-radius: 50%; background: var(--rose-soft); color: var(--rose); font-size: 12px; font-weight: 700; display: grid; place-items: center; }
+.checks b { color: var(--ink); }
+.roles { display: flex; flex-wrap: wrap; gap: 8px; }
+.roles span { font-size: 13.5px; font-weight: 600; padding: 6px 12px; border-radius: 10px; background: var(--navy-soft); color: var(--ink); }
+.portrait { position: relative; aspect-ratio: 1; max-width: 360px; width: 100%; justify-self: center; }
+.portrait .blob { position: absolute; inset: 0; border-radius: 46% 54% 50% 50% / 52% 44% 56% 48%; background: linear-gradient(140deg, var(--rose-soft), var(--gold-soft) 60%, var(--navy-soft)); }
+.portrait .initials { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--serif); font-size: clamp(90px, 16vw, 140px); font-weight: 600; color: var(--ink); letter-spacing: -.04em; }
+.badge { position: absolute; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 10px 14px; box-shadow: 0 10px 30px rgba(29,35,64,.10); font-size: 13px; line-height: 1.35; }
+.badge b { display: block; color: var(--ink); font-size: 15px; }
+.badge.b1 { left: -6%; bottom: 14%; }
+.badge.b2 { right: -4%; top: 10%; }
+@media (max-width: 420px) { .badge.b1 { left: 0; } .badge.b2 { right: 0; } }
+
+/* stats */
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 72px; }
+@media (max-width: 760px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 20px; }
+.stat .n { font-family: var(--serif); font-size: 36px; font-weight: 600; color: var(--ink); line-height: 1; }
+.stat .l { font-size: 14px; color: var(--muted); margin-top: 8px; }
+.stat:nth-child(1) { border-top: 4px solid var(--rose); }
+.stat:nth-child(2) { border-top: 4px solid var(--gold); }
+.stat:nth-child(3) { border-top: 4px solid var(--sage); }
+.stat:nth-child(4) { border-top: 4px solid var(--ink); }
+
+/* sections */
+section { padding: 24px 0 64px; scroll-margin-top: 70px; }
+.sec-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 26px; }
+.sec-head .num { font-family: var(--serif); color: var(--gold); font-size: 18px; }
+h2 { font-family: var(--serif); font-weight: 600; color: var(--ink); font-size: clamp(30px, 4.5vw, 40px); margin: 0; letter-spacing: -.01em; }
+h3 { font-family: var(--serif); font-weight: 600; color: var(--ink); font-size: 21px; margin: 0 0 4px; line-height: 1.25; }
+
+/* featured project */
+.feature { display: grid; grid-template-columns: 1.1fr 1fr; gap: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 22px; overflow: hidden; margin-bottom: 18px; }
+@media (max-width: 820px) { .feature { grid-template-columns: 1fr; } }
+.feature .txt { padding: 30px; }
+.feature .viz { background: var(--navy-soft); padding: 26px; display: flex; flex-direction: column; justify-content: center; gap: 12px; }
+.tag { display: inline-block; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; margin: 0 6px 6px 0; }
+.t-rose { background: var(--rose-soft); color: var(--rose); }
+.t-gold { background: var(--gold-soft); color: var(--gold); }
+.t-sage { background: var(--sage-soft); color: var(--sage); }
+.t-navy { background: var(--navy-soft); color: var(--ink); }
+.kicker { font-size: 13px; color: var(--muted); font-weight: 600; margin-bottom: 10px; }
+.feature ul { padding-left: 18px; margin: 14px 0 0; }
+.feature li { margin-bottom: 6px; }
+.flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.flow div { background: var(--surface); border-radius: 12px; padding: 12px 8px; text-align: center; font-size: 12.5px; font-weight: 600; color: var(--ink); position: relative; border: 1px solid var(--line); }
+.flow div span { display: block; font-size: 22px; margin-bottom: 4px; }
+.depts { display: flex; flex-wrap: wrap; gap: 6px; }
+.depts span { background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: 12.5px; font-weight: 500; }
+.result { background: var(--surface); border-left: 4px solid var(--sage); border-radius: 10px; padding: 12px 14px; font-size: 14.5px; color: var(--ink); }
+
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 900px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 580px) { .grid { grid-template-columns: 1fr; } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 22px; display: flex; flex-direction: column; gap: 8px; }
+.card .icon { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; font-size: 21px; margin-bottom: 4px; }
+.card p { margin: 0; font-size: 15px; }
+
+/* timeline */
+.timeline { position: relative; padding-left: 28px; }
+.timeline::before { content: ""; position: absolute; left: 7px; top: 6px; bottom: 6px; width: 2px; background: var(--line); }
+.item { position: relative; padding-bottom: 28px; }
+.item::before { content: ""; position: absolute; left: -27px; top: 6px; width: 14px; height: 14px; border-radius: 50%; background: var(--bg); border: 3px solid var(--rose); }
+.item.gold::before { border-color: var(--gold); }
+.item.sage::before { border-color: var(--sage); }
+.item.navy::before { border-color: var(--ink); }
+.item .when { font-size: 13px; font-weight: 600; color: var(--muted); }
+.item .org { font-weight: 600; color: var(--body); margin-bottom: 6px; }
+.item p { margin: 0; max-width: 68ch; }
+
+/* skills */
+.skills { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 820px) { .skills { grid-template-columns: 1fr; } }
+.skillset { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 22px; }
+.skillset h3 { font-size: 18px; margin-bottom: 12px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips span { font-size: 13.5px; font-weight: 500; padding: 6px 12px; border-radius: 10px; background: var(--bg); border: 1px solid var(--line); color: var(--ink); }
+
+/* edu */
+.edu { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 680px) { .edu { grid-template-columns: 1fr; } }
+
+/* beyond */
+.beyond { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; }
+@media (max-width: 820px) { .beyond { grid-template-columns: 1fr; } }
+.ice { align-self: start; background: linear-gradient(150deg, var(--navy-soft), var(--surface)); border: 1px solid var(--line); border-radius: 22px; padding: 30px; position: relative; overflow: hidden; }
+.ice svg { position: absolute; right: -10px; bottom: -10px; width: 170px; opacity: .55; }
+.ice .big { font-family: var(--serif); font-size: 26px; color: var(--ink); line-height: 1.25; margin: 6px 0 12px; max-width: 22ch; }
+.stack { display: flex; flex-direction: column; gap: 16px; }
+
+.games { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
+@media (max-width: 580px) { .games { grid-template-columns: 1fr; } }
+.game { text-decoration: none; color: var(--ink); background: var(--rose-soft); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 6px; }
+.game:hover { outline: 2px solid var(--rose); }
+.game b { font-family: var(--serif); font-size: 18px; }
+.game span { font-size: 13px; color: var(--body); }
+.game canvas { width: 100%; height: 56px; }
+
+/* contact */
+.contact { background: var(--ink); color: var(--bg); border-radius: 26px; padding: 44px; text-align: center; margin-bottom: 40px; }
+.contact h2 { color: var(--bg); }
+.contact p { color: color-mix(in srgb, var(--bg) 80%, transparent); max-width: 52ch; margin: 12px auto 22px; }
+.contact .btn { border-color: var(--bg); color: var(--bg); }
+.contact .btn.primary { background: var(--bg); color: var(--ink); }
+footer { text-align: center; font-size: 13px; color: var(--muted); padding: 0 0 36px; }
+.theme { background: none; border: 1px solid var(--line); border-radius: 999px; width: 36px; height: 36px; cursor: pointer; color: var(--ink); font-size: 16px; }
+
+/* case study visuals */
+.kpi { background: var(--surface); border-radius: 14px; padding: 14px; border: 1px solid var(--line); }
+.kpi-label { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 10px; }
+.split { display: flex; height: 34px; border-radius: 10px; overflow: hidden; font-size: 13px; font-weight: 700; color: #fff; }
+.split div { display: flex; align-items: center; padding: 0 10px; white-space: nowrap; }
+.pareto { display: flex; flex-direction: column; gap: 8px; }
+.pareto > div { display: grid; grid-template-columns: 104px 1fr 42px; align-items: center; gap: 8px; font-size: 13px; }
+.pareto b { color: var(--ink); text-align: right; }
+.pbar { height: 12px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.pbar i { display: block; height: 100%; border-radius: 999px; }
+.donutrow { display: flex; align-items: center; gap: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+.donutrow p { margin: 0; font-size: 14.5px; color: var(--ink); }
+.donut { width: 92px; height: 92px; flex: none; }
+.donut text { font-family: var(--serif); font-size: 9px; font-weight: 700; fill: var(--ink); }
+.mini-dash { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.md-row { display: grid; grid-template-columns: 96px 1fr; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: var(--ink); }
+.note { font-size: 12px; color: var(--muted); margin: 0; }
+.feature { margin-bottom: 22px; }
+.filters { display: flex; gap: 8px; flex-wrap: wrap; margin: -8px 0 20px; }
+.fbtn { font: inherit; font-size: 14px; font-weight: 600; padding: 7px 16px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); color: var(--body); cursor: pointer; }
+.fbtn[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.card[hidden] { display: none; }
+.honors { margin-top: 16px; background: var(--gold-soft); color: var(--ink); border-radius: 14px; padding: 14px 18px; font-size: 15px; }
+
+.reveal { opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.in { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="mark" href="#top">Lexi Loughlin<span>.</span></a>
+    <div class="links">
+      <a href="#about">About</a><a href="#work">Case studies</a><a href="#projects">Projects</a><a href="#experience">Experience</a><a href="#skills">Skills</a><a href="#contact">Contact</a>
+    </div>
+    <button class="theme" id="theme" aria-label="Switch light or dark mode">◐</button>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+  <header class="hero">
+    <div>
+      <p class="eyebrow"><span class="dot"></span>M.S. Business Analytics · SMU Cox '27</p>
+      <h1>Hi, I'm <em>Lexi!</em></h1>
+      <p class="tagline">I went from the <span class="hl hl-rose">World Championships</span> to decoding <span class="hl hl-gold">$29 billion</span> in airline data.</p>
+      <p class="lede">Now I find the signal in messy data and turn it into moves leaders actually make, across energy, aviation and global trade.</p>
+      <div class="ctas">
+        <a class="btn primary" href="#work">See my work →</a>
+        <a class="btn ghost" href="#contact">Get in touch</a>
+      </div>
+      <div class="logos" aria-label="Where I've worked and studied">
+        <span>BKV Energy</span><span>ODI London</span><span>SMU Cox</span><span>Team Azerbaijan</span>
+      </div>
+    </div>
+    <div class="reel" aria-label="Highlights">
+      <div class="hcard h1c"><div class="hi" style="background:var(--rose-soft)">⛸️</div><div><b>World Championships</b><span>Azerbaijan's #1 senior ice dance team</span></div></div>
+      <div class="hcard h2c"><div class="hi" style="background:var(--gold-soft)">✈️</div><div><b>$29B decoded</b><span>79% of airline spend wasn't real demand</span></div></div>
+      <div class="hcard h3c"><div class="hi" style="background:var(--sage-soft)">⚡</div><div><b>Adopted company-wide</b><span>My intranet template at BKV Energy</span></div></div>
+      <div class="hcard h4c"><div class="hi" style="background:var(--navy-soft)">🇬🇧</div><div><b>UK trade policy</b><span>Market analysis for 4 ODI briefs</span></div></div>
+    </div>
+  </header>
+
+  <section id="about">
+    <div class="sec-head"><span class="num">01</span><h2>What I'm looking for</h2></div>
+    <div class="fit reveal">
+      <div class="seek">
+        <div class="avail"><span class="dot"></span>Available for a co-op from January 2027 and full-time after May 2027 · Dallas, TX</div>
+        <p class="seek-lead">A role where I get to <em>build</em>, not just analyze from the sidelines.</p>
+        <ul class="checks">
+          <li><b>Analytics, strategy or consulting</b> work where the answer isn't obvious and the data is messy</li>
+          <li><b>Energy, innovation and future systems</b>, the industries deciding what comes next</li>
+          <li><b>Ambitious, collaborative teams</b> where everyone shows up and pushes each other</li>
+          <li><b>Real problems with real stakes</b>, where my work turns into decisions</li>
+        </ul>
+        <div class="roles"><span>Data Analyst</span><span>Consulting Analyst</span><span>Strategy & Insights</span><span>Business Analytics</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="strengths">
+    <div class="sec-head"><span class="num">02</span><h2>What I'm good at</h2></div>
+    <div class="grid strengths">
+      <article class="card reveal">
+        <div class="icon" style="background:var(--rose-soft)">🔎</div>
+        <h3>Finding what everyone missed</h3>
+        <p>I go past the obvious answer to the root cause. In $29B of airline spend, the real story was that 79% wasn't demand at all.</p>
+      </article>
+      <article class="card reveal">
+        <div class="icon" style="background:var(--gold-soft)">💡</div>
+        <h3>Making complex ideas click</h3>
+        <p>I turn statistics and technical concepts into examples people actually remember, one-on-one or on the page.</p>
+      </article>
+      <article class="card reveal">
+        <div class="icon" style="background:var(--sage-soft)">🤝</div>
+        <h3>Connecting numbers and people</h3>
+        <p>I pair surveys and interviews with analytics, so the data explains what people need, not just what they clicked.</p>
+      </article>
+      <article class="card reveal">
+        <div class="icon" style="background:var(--navy-soft)">🕸️</div>
+        <h3>Thinking in systems</h3>
+        <p>I map how one change ripples upstream and downstream before recommending it.</p>
+      </article>
+      <article class="card reveal">
+        <div class="icon" style="background:var(--rose-soft)">✍️</div>
+        <h3>Writing that holds up</h3>
+        <p>Published research summaries at ODI in London and business journalism at SMU. Thorough, sourced and clear.</p>
+      </article>
+      <article class="card reveal">
+        <div class="icon" style="background:var(--gold-soft)">🌍</div>
+        <h3>Working across cultures</h3>
+        <p>I lived on my own abroad as a teenager, competed in 7 countries, and work in English, Russian and French.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="work">
+    <div class="sec-head"><span class="num">02</span><h2>Case studies</h2></div>
+
+    <article class="feature reveal">
+      <div class="txt">
+        <div class="kicker">Airline Repairables Analytics · May 2026</div>
+        <h3>Finding the noise hiding in $29B of parts spend</h3>
+        <div><span class="tag t-sage">Python</span><span class="tag t-navy">pandas</span><span class="tag t-gold">Plotly</span><span class="tag t-rose">LLM-assisted coding</span></div>
+        <p>A major U.S. airline's repair forecasts were built on spend data that didn't reflect real demand. Our team analyzed 3.43 million repairable parts transactions to find out why.</p>
+        <ul>
+          <li>Built a monthly noise scorecard and an interactive Plotly dashboard</li>
+          <li>Isolated 4 distortion sources: unused kit returns, multi-station "chasing the plane," scrap and orphaned transactions</li>
+          <li>Quantified $22.8B in chaser activity and recommended financial controls and parts traceability for a clean forecasting baseline</li>
+        </ul>
+      </div>
+      <div class="viz" aria-label="Key findings">
+        <div class="kpi">
+          <div class="kpi-label">Share of monthly spend that wasn't real demand</div>
+          <div class="split"><div style="width:79%;background:var(--rose)">79% non-demand</div><div style="width:21%;background:var(--sage)">21%</div></div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">686 parts drove most of the variance</div>
+          <div class="pareto">
+            <div><span>Parts</span><div class="pbar"><i style="width:3.4%;background:var(--gold)"></i></div><b>3.4%</b></div>
+            <div><span>Spend variance</span><div class="pbar"><i style="width:80%;background:var(--gold)"></i></div><b>80%</b></div>
+          </div>
+        </div>
+        <div class="result"><b>Takeaway:</b> clean the data before you forecast it. Client name kept confidential.</div>
+      </div>
+    </article>
+
+    <article class="feature reveal">
+      <div class="txt">
+        <div class="kicker">BKV Energy · Summer 2026</div>
+        <h3>Rebuilding the company intranet from employee research</h3>
+        <div><span class="tag t-rose">Qualtrics</span><span class="tag t-sage">Python</span><span class="tag t-gold">Excel</span><span class="tag t-navy">Stakeholder interviews</span></div>
+        <p>BKV's intranet, Spark, wasn't giving employees what they needed. I designed and ran an employee survey, analyzed it statistically, and paired the results with leadership interviews across seven departments to pinpoint the gaps.</p>
+        <ul>
+          <li>Rebuilt Spark's page template in Python around what employees asked for</li>
+          <li>The template was adopted company-wide as the base for every department's page</li>
+        </ul>
+      </div>
+      <div class="viz" aria-label="Key findings">
+        <div class="donutrow">
+          <svg viewBox="0 0 42 42" class="donut" aria-hidden="true"><circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--line)" stroke-width="6"/><circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--rose)" stroke-width="6" stroke-dasharray="89 11" stroke-dashoffset="25" stroke-linecap="round"/><text x="21" y="24" text-anchor="middle">89%</text></svg>
+          <p>of employees wanted <b>concise navigation</b>, so the new template was built around it.</p>
+        </div>
+        <div class="flow">
+          <div><span>📝</span>Survey</div>
+          <div><span>💬</span>Interviews</div>
+          <div><span>📊</span>Analysis</div>
+          <div><span>🧩</span>Template</div>
+        </div>
+        <div class="result"><b>Result:</b> adopted company-wide.</div>
+      </div>
+    </article>
+
+    <article class="feature reveal">
+      <div class="txt">
+        <div class="kicker">BKV Energy · Summer 2026</div>
+        <h3>Scoring marketing communications in Tableau</h3>
+        <div><span class="tag t-navy">Tableau</span><span class="tag t-gold">KPIs</span><span class="tag t-rose">Executive presentation</span></div>
+        <p>Built an interactive Tableau dashboard that scores marketing communications performance, used it to validate BKV's 2025 year-end report, and presented the findings to leadership.</p>
+      </div>
+      <div class="viz" aria-label="Dashboard illustration">
+        <div class="mini-dash">
+          <div class="md-row"><span>Reach</span><div class="pbar"><i style="width:82%;background:var(--sage)"></i></div></div>
+          <div class="md-row"><span>Engagement</span><div class="pbar"><i style="width:64%;background:var(--gold)"></i></div></div>
+          <div class="md-row"><span>Clarity</span><div class="pbar"><i style="width:71%;background:var(--rose)"></i></div></div>
+          <div class="md-row"><span>Consistency</span><div class="pbar"><i style="width:58%;background:var(--ink)"></i></div></div>
+        </div>
+        <p class="note">Illustration only. Real dashboard data stays with BKV.</p>
+      </div>
+    </article>
+  </section>
+
+  <section id="projects">
+    <div class="sec-head"><span class="num">03</span><h2>Academic projects</h2></div>
+    <div class="filters" role="group" aria-label="Filter projects">
+      <button class="fbtn" aria-pressed="true" data-f="all">All</button>
+      <button class="fbtn" aria-pressed="false" data-f="analytics">Analytics</button>
+      <button class="fbtn" aria-pressed="false" data-f="strategy">Strategy</button>
+      <button class="fbtn" aria-pressed="false" data-f="consulting">Consulting</button>
+      <button class="fbtn" aria-pressed="false" data-f="venture">Ventures</button>
+    </div>
+    <div class="grid" id="pgrid">
+      <article class="card reveal" data-cat="analytics">
+        <div class="icon" style="background:var(--navy-soft)">🎲</div>
+        <div class="kicker">Decision Modeling · Oct 2026</div>
+        <h3>Optimization & Monte Carlo models</h3>
+        <div><span class="tag t-navy">Excel Solver</span><span class="tag t-gold">Simulation</span></div>
+        <p>Linear and integer optimization for capital budgeting, supplier cost minimization and production planning, guided by sensitivity analysis and shadow prices. Decision trees and Monte Carlo simulations to test airline overbooking and seat pricing under uncertainty.</p>
+      </article>
+      <article class="card reveal" data-cat="strategy">
+        <div class="icon" style="background:var(--rose-soft)">💊</div>
+        <div class="kicker">Operations case</div>
+        <h3>Redesigning CVS prescription fulfillment</h3>
+        <div><span class="tag t-rose">Process redesign</span><span class="tag t-sage">Pilot planning</span></div>
+        <p>CVS lost about 7.2M regular pharmacy customers, worth an estimated $2.5B, largely to service problems. With 16% of prescriptions still unresolved at pickup, we proposed priority-based processing, earlier customer notifications and an 8-week pilot with defined metrics, while keeping every safety check intact.</p>
+      </article>
+      <article class="card reveal" data-cat="strategy">
+        <div class="icon" style="background:var(--gold-soft)">🚴</div>
+        <div class="kicker">Strategy analysis · team of 3</div>
+        <h3>Peloton: a path to recovery</h3>
+        <div><span class="tag t-gold">SWOT</span><span class="tag t-navy">Corporate strategy</span></div>
+        <p>Assessed Peloton's position after years of operating losses and a 98% stock decline. Recommended prioritizing free cash flow, continued restructuring, tiered app memberships, corporate wellness partnerships and controlled international expansion.</p>
+      </article>
+      <article class="card reveal" data-cat="venture">
+        <div class="icon" style="background:var(--sage-soft)">🐕</div>
+        <div class="kicker">Venture design · team of 4</div>
+        <h3>Dalis: fresh dog food for Mexico</h3>
+        <div><span class="tag t-sage">38 customer interviews</span><span class="tag t-rose">MVP</span></div>
+        <p>Interviews showed that price and switching risk keep owners on kibble, so we pivoted from a full replacement to a two-step ladder: a 50/50 "topper" plan that converts to full fresh. Added biweekly billing, a quiz-based landing page and a single-city launch in Mexico City.</p>
+      </article>
+      <article class="card reveal" data-cat="consulting">
+        <div class="icon" style="background:var(--navy-soft)">💡</div>
+        <div class="kicker">Client consulting engagement</div>
+        <h3>Nordco: digital turnaround</h3>
+        <div><span class="tag t-navy">Customer experience</span><span class="tag t-gold">SEO</span></div>
+        <p>On the customer experience team for an energy-efficient lighting company with an outdated, hard-to-find website. We rebuilt it mobile-first, sharpened the messaging and calls to action, set up Google Analytics and Search Console, and trained the client to run it themselves.</p>
+      </article>
+      <article class="card reveal" data-cat="strategy">
+        <div class="icon" style="background:var(--rose-soft)">🔄</div>
+        <div class="kicker">Organizational behavior · team of 5</div>
+        <h3>Beyond the holacracy hype</h3>
+        <div><span class="tag t-rose">Critical analysis</span><span class="tag t-navy">Org design</span></div>
+        <p>Critiqued Harvard's research on self-managing organizations through Zappos, where 18% of employees took a buyout rather than adopt holacracy. Argued that judging it on efficiency alone misses retention and quality of life, then offered recommendations.</p>
+      </article>
+      <article class="card reveal" data-cat="venture">
+        <div class="icon" style="background:var(--gold-soft)">🐾</div>
+        <div class="kicker">Entrepreneurship pitch</div>
+        <h3>Pony Up Pet Sitting</h3>
+        <div><span class="tag t-gold">Marketplace</span><span class="tag t-sage">Pitch</span></div>
+        <p>A pet care platform for SMU, staffed only by SMU students, matching a campus full of pet owners with students who want flexible work.</p>
+      </article>
+      <article class="card reveal" data-cat="analytics">
+        <div class="icon" style="background:var(--sage-soft)">🗄️</div>
+        <div class="kicker">SQL coursework</div>
+        <h3>SQL across real datasets</h3>
+        <div><span class="tag t-navy">SQL</span><span class="tag t-sage">DataCamp</span></div>
+        <p>Queried OpenFlights, IMDB, Northwind, Dallas restaurant inspections and DCAD real estate records as part of SQL coursework and DataCamp's Data Analyst Associate track.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="sec-head"><span class="num">04</span><h2>Experience</h2></div>
+    <div class="timeline">
+      <div class="item reveal">
+        <div class="when">Summer 2026 · Dallas, TX</div>
+        <h3>Operations Intern, Analytics</h3>
+        <div class="org">BKV Energy</div>
+        <p>Led the Spark intranet research and redesign and built the marketing communications scorecard. Toured BKV's Barnett Zero and Cotton Cove carbon capture sites and learned how CO₂ storage earns federal 45Q credits.</p>
+      </div>
+      <div class="item gold reveal">
+        <div class="when">Summer 2024 · London, UK</div>
+        <h3>Economic Policy & Trade Intern</h3>
+        <div class="org">Overseas Development Institute</div>
+        <p>Worked with economists and UK policymakers to analyze 6 markets in Excel, informing 4 trade policy briefs. Published a public summary of an ODI and IPEA panel on WTO reform, the "green squeeze" and neo-protectionism. Supported research and source-checking for the 14-essay book <i>Sri Lanka: From Debt Default to Transformative Growth</i>.</p>
+      </div>
+      <div class="item sage reveal">
+        <div class="when">Jan 2024 to Jan 2025</div>
+        <h3>Director of Recruitment & Retention</h3>
+        <div class="org">Delta Gamma, SMU</div>
+        <p>Directed recruitment for a 300+ member chapter, evaluating 500+ applicants in Excel to select about 70 new members.</p>
+      </div>
+      <div class="item navy reveal">
+        <div class="when">Jul 2019 to Jan 2022 · Minsk, Belarus</div>
+        <h3>Senior International Team Ice Dancer</h3>
+        <div class="org">Azerbaijan National Figure Skating Team</div>
+        <p>Azerbaijan's #1 senior ice dance team and a World Championships qualifier, competing across 7 countries. Analyzed 9-judge ISU scoring data element by element to set training goals and raised our total score by 10 points in the final season. Earned Azerbaijani citizenship to compete, managed visas for my partner and me, trained 40+ hours a week and kept up AP and honors classes remotely.</p>
+      </div>
+      <div class="item reveal">
+        <div class="when">Ongoing</div>
+        <h3>Campus leadership</h3>
+        <div class="org">SMU Cox</div>
+        <p>Cox Graduate Ambassador · Graduate Writer, Mustang Business Journal · Collegiate Consulting Academy · Corporate Strategy and Consulting Club · Women in Business</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="sec-head"><span class="num">05</span><h2>Skills</h2></div>
+    <div class="skills">
+      <div class="skillset reveal">
+        <h3>📊 Tools</h3>
+        <div class="chips"><span>Python</span><span>SQL</span><span>R</span><span>Excel</span><span>Power Query</span><span>Excel Solver</span><span>Power BI</span><span>Tableau</span><span>Plotly</span><span>Qualtrics</span><span>Google Analytics</span><span>GitHub</span><span>WordPress</span><span>LLMs & prompt engineering</span></div>
+      </div>
+      <div class="skillset reveal">
+        <h3>📈 Analysis</h3>
+        <div class="chips"><span>Financial analysis</span><span>Financial modeling</span><span>Decision modeling</span><span>Forecasting</span><span>Optimization</span><span>Hypothesis testing</span><span>Data validation</span><span>Data visualization</span><span>Workflow automation</span></div>
+      </div>
+      <div class="skillset reveal">
+        <h3>🌍 Also</h3>
+        <div class="chips"><span>Survey design</span><span>Stakeholder interviews</span><span>Business writing</span><span>Executive presentations</span><span>Conversational French</span><span>Conversational Russian</span><span>Microsoft Office Specialist: Excel Associate</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="education">
+    <div class="sec-head"><span class="num">06</span><h2>Education</h2></div>
+    <div class="edu">
+      <div class="card reveal">
+        <div class="icon" style="background:var(--navy-soft)">🎓</div>
+        <div class="kicker">Expected May 2027</div>
+        <h3>M.S. Business Analytics</h3>
+        <p>SMU Cox School of Business</p>
+      </div>
+      <div class="card reveal">
+        <div class="icon" style="background:var(--rose-soft)">🎓</div>
+        <div class="kicker">Completed</div>
+        <h3>BBA, Marketing & Finance</h3>
+        <p>SMU Cox School of Business · SMU Cox in London, Summer 2024</p>
+      </div>
+    </div>
+    <div class="honors reveal"><b>Honors:</b> BBA Scholar · Second Century Scholar · Sewell Merit Scholar · Cox Graduate Ambassador Scholarship</div>
+  </section>
+
+  <section id="beyond">
+    <div class="sec-head"><span class="num">07</span><h2>Beyond work</h2></div>
+    <div class="beyond">
+      <div class="ice reveal">
+        <div class="kicker">Before business school</div>
+        <div class="big">I competed for Azerbaijan at the highest level of ice dance.</div>
+        <p style="max-width:46ch;margin:0">Placements came down to hundredths of a point, so I learned to read judges' data closely, take feedback fast and perform under pressure, all while living on my own abroad as a teenager.</p>
+        <svg viewBox="0 0 200 200" aria-hidden="true"><g fill="none" stroke-width="2"><path d="M20 170 C 70 120, 130 200, 185 140" stroke="var(--rose)" stroke-dasharray="4 6"/><path d="M30 120 C 80 60, 140 150, 190 80" stroke="var(--gold)" stroke-dasharray="4 6"/><circle cx="185" cy="140" r="5" fill="var(--rose)"/><circle cx="190" cy="80" r="5" fill="var(--gold)"/></g></svg>
+      </div>
+      <div class="stack">
+        <div class="card reveal">
+          <div class="icon" style="background:var(--gold-soft)">🎨</div>
+          <h3>Painting, ESG & AI</h3>
+          <p>Outside class I paint, read about sustainable finance and ESG, and experiment with AI tools.</p>
+        </div>
+        <div class="card reveal">
+          <div class="icon" style="background:var(--rose-soft)">🐹</div>
+          <h3>Guinea pig games</h3>
+          <p>I build browser games starring my guinea pigs. Play them:</p>
+          <div class="games">
+            <a class="game" href="https://lexiloughlin.github.io/poop-patrol/"><canvas data-pig="0" width="240" height="112"></canvas><b>Poop Patrol</b><span>Maze arcade game</span></a>
+            <a class="game" href="https://lexiloughlin.github.io/pig-city/"><canvas data-pig="4" width="240" height="112"></canvas><b>Pig City</b><span>Town builder</span></a>
+            <a class="game" href="https://github.com/lexiloughlin"><canvas data-pig="2" width="240" height="112"></canvas><b>More on GitHub</b><span>Veggie Wheek and more</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="contact reveal">
+      <h2>Let's talk</h2>
+      <p>I'm looking for analytics, risk and compliance roles where careful research and clear writing make a difference.</p>
+      <div class="ctas" style="justify-content:center">
+        <a class="btn primary" href="mailto:lloughlin@smu.edu">Email me</a>
+        <a class="btn" href="https://www.linkedin.com/in/lexiloughlin">LinkedIn</a>
+        <a class="btn" href="https://github.com/lexiloughlin">GitHub</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer>© <span id="yr"></span> Alexandria Loughlin · Dallas, TX</footer>
+
+<script>
+(() => {
+  document.getElementById('yr').textContent = new Date().getFullYear();
+  // theme toggle
+  const root = document.documentElement, btn = document.getElementById('theme');
+  try { const t = localStorage.getItem('ll-theme'); if (t) root.dataset.theme = t; } catch (e) {}
+  btn.addEventListener('click', () => {
+    const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    root.dataset.theme = dark ? 'light' : 'dark';
+    try { localStorage.setItem('ll-theme', root.dataset.theme); } catch (e) {}
+  });
+  // reveal on scroll
+  const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .12 }) : null;
+  document.querySelectorAll('.reveal').forEach(el => io ? io.observe(el) : el.classList.add('in'));
+
+  // project filters
+  const fbtns = document.querySelectorAll('.fbtn');
+  fbtns.forEach(b => b.addEventListener('click', () => {
+    fbtns.forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+    document.querySelectorAll('#pgrid .card').forEach(card => { card.hidden = b.dataset.f !== 'all' && card.dataset.cat !== b.dataset.f; if (!card.hidden) card.classList.add('in'); });
+  }));
+  // little pig portraits on the game cards
+  const WHITE = '#fbf6ee', INK = '#3b2a1a';
+  const SKINS = [
+    { base: '#c96d2c', rear: '#3d271b', eyePatch: '#3d271b', blaze: WHITE, chin: WHITE, ear: '#e0a08a' },
+    { base: '#1e1b20', fluffy: true, ear: '#3c3438', dark: true, nose: '#5a4048' },
+    { base: '#d27b2f', band: WHITE, head: '#221915', chin: WHITE, ear: '#7b5236', dark: true },
+    { base: '#201b1c', band: WHITE, cheek: '#c9752f', ear: '#3a2f2c', dark: true },
+    { base: '#2b3552', head: '#e6b866', suit: true, ear: '#d48f72', nose: '#d97b7b', glasses: true }
+  ];
+  function ell(c, x, y, rx, ry, rot = 0) { c.beginPath(); c.ellipse(x, y, rx, ry, rot, 0, Math.PI * 2); }
+
+  // Side-view pig, origin at body centre, facing right. ~72 x 46 units.
+  function drawPig(c, skin, o = {}) {
+    const chew = o.chew || 0;
+    c.lineJoin = 'round';
+    c.fillStyle = '#f0b3a6';
+    for (const fx of [-20, 18]) { ell(c, fx, 19, 6, 3.5); c.fill(); c.lineWidth = 1.5; c.strokeStyle = INK; c.stroke(); }
+    const body = new Path2D(); body.ellipse(0, 0, 36, 22, 0, 0, Math.PI * 2);
+    if (skin.fluffy) {
+      const fur = new Path2D();
+      for (let i = 0; i <= 44; i++) {
+        const a = i / 44 * Math.PI * 2, k = i % 2 ? 1.0 : 1.12;
+        const px = Math.cos(a) * 36 * k, py = Math.sin(a) * 22 * k;
+        i ? fur.lineTo(px, py) : fur.moveTo(px, py);
+      }
+      fur.closePath();
+      c.fillStyle = skin.base; c.fill(fur); c.lineWidth = 2.2; c.strokeStyle = INK; c.stroke(fur);
+    }
+    c.fillStyle = skin.base; c.fill(body);
+    c.save(); c.clip(body);
+    if (skin.rear) { c.fillStyle = skin.rear; ell(c, -26, 0, 26, 28); c.fill(); }
+    if (skin.band) { c.fillStyle = skin.band; c.fillRect(-3, -30, 15, 60); }
+    if (skin.head) { c.fillStyle = skin.head; ell(c, 27, -2, 17, 26); c.fill(); }
+    if (skin.suit) {
+      // pinstripes
+      c.strokeStyle = 'rgba(255,255,255,.13)'; c.lineWidth = 1;
+      for (let x = -36; x < 12; x += 6) { c.beginPath(); c.moveTo(x, -24); c.lineTo(x, 24); c.stroke(); }
+      // shirt V + lapels + red tie at the collar
+      c.fillStyle = '#fff'; c.beginPath(); c.moveTo(7, -18); c.lineTo(13, 10); c.lineTo(17, -18); c.closePath(); c.fill();
+      c.fillStyle = '#1d2540'; c.beginPath(); c.moveTo(4, -18); c.lineTo(11, 4); c.lineTo(7, -18); c.closePath(); c.fill();
+      c.fillStyle = '#c8343c'; c.beginPath(); c.moveTo(11, -16); c.lineTo(14, -16); c.lineTo(15, 2); c.lineTo(12.5, 6); c.lineTo(10, 2); c.closePath(); c.fill();
+    }
+    if (skin.cheek) { c.fillStyle = skin.cheek; ell(c, 31, 4, 10, 9); c.fill(); }
+    if (skin.eyePatch) { c.fillStyle = skin.eyePatch; ell(c, 23, -6, 9, 9.5); c.fill(); }
+    if (skin.blaze) { c.fillStyle = skin.blaze; ell(c, 29, -12, 13, 4.5, 0.55); c.fill(); }
+    if (skin.chin) { c.fillStyle = skin.chin; ell(c, 33, 9, 7.5, 6.5); c.fill(); }
+    c.restore();
+    if (!skin.fluffy) { c.lineWidth = 2.5; c.strokeStyle = INK; c.stroke(body); }
+    c.fillStyle = skin.ear; ell(c, 17, -18, 7, 5, -0.5); c.fill(); c.lineWidth = 2; c.strokeStyle = INK; c.stroke();
+    if (o.sad) {
+      c.beginPath(); c.moveTo(21, -10); c.lineTo(28, -4); c.moveTo(21, -4); c.lineTo(28, -10);
+      c.lineWidth = 2; c.strokeStyle = skin.dark ? '#fff' : INK; c.stroke();
+    } else {
+      c.fillStyle = '#0b0809'; ell(c, 24.5, -7, 3.6, 3.6); c.fill();
+      if (skin.dark) { c.lineWidth = 1; c.strokeStyle = '#6b5a5f'; c.stroke(); }
+      c.fillStyle = '#fff'; ell(c, 25.8, -8.3, 1.3, 1.3); c.fill();
+    }
+    if (skin.glasses && !o.sad) {
+      c.lineWidth = 1.4; c.strokeStyle = INK;
+      ell(c, 24.5, -7, 5.2, 5.2); c.stroke();
+      c.beginPath(); c.moveTo(19.3, -7); c.lineTo(13, -9); c.stroke();
+    }
+    c.fillStyle = skin.nose || '#e07a7a'; ell(c, 35.5, 1, 2.8, 2.2); c.fill();
+    c.beginPath(); c.moveTo(33.5, 4.5); c.quadraticCurveTo(31.5, 8 + chew, 28.5, 7);
+    c.lineWidth = 1.5; c.strokeStyle = skin.dark ? '#9a8a8f' : INK; c.stroke();
+    c.beginPath(); c.moveTo(33, 0); c.lineTo(45, -3); c.moveTo(33, 2); c.lineTo(45, 4);
+    c.lineWidth = 1; c.strokeStyle = skin.dark ? '#cfc6c8' : INK; c.stroke();
+    if (!skin.dark) { c.fillStyle = 'rgba(240,130,130,.4)'; ell(c, 22, 4, 5, 3); c.fill(); }
+  }
+
+  function drawPoop(c, x, y, a, s = 1) {
+    c.save(); c.translate(x, y); c.rotate(a); c.scale(s, s);
+    c.fillStyle = '#4a3020'; ell(c, 0, 0, 3, 1.7); c.fill();
+    c.fillStyle = 'rgba(255,255,255,.35)'; ell(c, -0.8, -0.6, 1, .45); c.fill();
+    c.restore();
+  }
+  document.querySelectorAll('canvas[data-pig]').forEach(cv => {
+    const c = cv.getContext('2d'); c.translate(120, 58); c.scale(1.7, 1.7); drawPig(c, SKINS[+cv.dataset.pig]);
+  });
+})();
+</script>
+</body>
+</html>
