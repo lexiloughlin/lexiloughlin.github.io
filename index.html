@@ -249,7 +249,7 @@ footer { text-align: center; font-size: 13px; color: var(--muted); padding: 0 0 
   <div class="wrap">
     <a class="mark" href="#top">Lexi Loughlin<span>.</span></a>
     <div class="links">
-      <a href="#story">About</a><a href="#work">Case studies</a><a href="#projects">Projects</a><a href="#experience">Experience</a><a href="#skills">Skills</a><a href="#contact">Contact</a>
+      <a href="#story">About</a><a href="#work">Case studies</a><a href="#projects">Projects</a><a href="#experience">Experience</a><a href="#skills">Skills</a><a href="writing.html">Writing</a><a href="fun.html">Fun stuff</a><a href="#contact">Contact</a>
     </div>
     <button class="theme" id="theme" aria-label="Switch light or dark mode">◐</button>
   </div>
@@ -592,7 +592,7 @@ footer { text-align: center; font-size: 13px; color: var(--muted); padding: 0 0 
           <div class="games">
             <a class="game" href="https://lexiloughlin.github.io/poop-patrol/"><canvas data-pig="0" width="240" height="112"></canvas><b>Poop Patrol</b><span>Maze arcade game</span></a>
             <a class="game" href="https://lexiloughlin.github.io/pig-city/"><canvas data-pig="4" width="240" height="112"></canvas><b>Pig City</b><span>Town builder</span></a>
-            <a class="game" href="https://github.com/lexiloughlin"><canvas data-pig="2" width="240" height="112"></canvas><b>More on GitHub</b><span>Veggie Wheek and more</span></a>
+            <a class="game" href="fun.html"><canvas data-pig="2" width="240" height="112"></canvas><b>See them all →</b><span>SqueakQL, Veggie Wheek and more</span></a>
           </div>
         </div>
       </div>
@@ -711,7 +711,7 @@ footer { text-align: center; font-size: 13px; color: var(--muted); padding: 0 0 
     c.restore();
   }
   document.querySelectorAll('canvas[data-pig]').forEach(cv => {
-    const c = cv.getContext('2d'); c.translate(120, 58); c.scale(1.7, 1.7); drawPig(c, SKINS[+cv.dataset.pig]);
+    const c = cv.getContext('2d'), w = cv.width, h = cv.height, k = Math.min(h / 112 * 1.7, w / 100); c.translate(w / 2, h * .52); c.scale(k, k); drawPig(c, SKINS[+cv.dataset.pig]);
   });
 })();
 </script>
