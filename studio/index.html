@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Writing Studio</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Writing Studio">
+<meta name="theme-color" content="#8c1d2f">
+<meta name="robots" content="noindex">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Literata:opsz,wght@7..72,400;7..72,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f2ea; --panel:#fffdf8; --ink:#1f1b16; --muted:#71695e; --line:#e4ddcf; --soft:#efe9de;
+  --accent:#8c1d2f; --accent-soft:#f6e3e5;
+  --mbj:#2f6fb5; --cover:#8c1d2f; --email:#2f8f63; --school:#b57a1e;
+  --warn:#c4462f; --warn-soft:#fbe4de; --ok:#2f8f63; --ok-soft:#ddf1e6;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:"DM Sans",system-ui,sans-serif;font-size:14px}
+button,input,textarea,select{font:inherit;color:inherit}
+.app{display:flex;flex-direction:column;height:100vh}
+.top{display:flex;align-items:center;gap:18px;padding:12px 20px;border-bottom:1px solid var(--line);background:var(--panel)}
+.brand{font-family:"Instrument Serif",serif;font-size:26px;line-height:1}
+.brand i{color:var(--accent)}
+.tabs{display:flex;gap:4px;background:var(--soft);padding:3px;border-radius:9px}
+.tabs button{border:0;background:transparent;padding:7px 14px;border-radius:7px;cursor:pointer;color:var(--muted);font-weight:500}
+.tabs button.on{background:var(--panel);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.grow{flex:1}
+.status{font-size:12px;color:var(--muted)}
+.status .d{display:inline-block;width:8px;height:8px;border-radius:50%;background:#bbb;margin-right:6px;vertical-align:0}
+.status.on .d{background:var(--ok)}
+.status.local .d{background:var(--school)}
+
+.btn{border:1px solid var(--line);background:var(--panel);padding:7px 12px;border-radius:8px;cursor:pointer;font-weight:500;display:inline-flex;align-items:center;gap:6px}
+.btn:hover:not(:disabled){border-color:#cdc3b1}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover:not(:disabled){filter:brightness(1.1)}
+.btn.sm{padding:5px 9px;font-size:12.5px}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--muted)}
+.btn.ghost:hover{color:var(--warn)}
+
+.view{display:none;flex:1;min-height:0}
+.view.on{display:flex}
+
+/* WRITE */
+.side{width:240px;border-right:1px solid var(--line);display:flex;flex-direction:column;background:#faf6ef}
+.side .head{padding:14px;display:flex;gap:8px;flex-wrap:wrap}
+.newmenu{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 14px 12px}
+.newmenu button{border:1px dashed var(--line);background:transparent;border-radius:8px;padding:8px 6px;cursor:pointer;font-size:12.5px;text-align:left}
+.newmenu button:hover{background:var(--panel);border-style:solid}
+.newmenu b{display:block;font-weight:600}
+.search{margin:0 14px 10px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.dlist{flex:1;overflow:auto;padding:0 8px 14px}
+.ditem{padding:9px 10px;border-radius:8px;cursor:pointer;margin-bottom:2px;border-left:3px solid transparent}
+.ditem:hover{background:var(--soft)}
+.ditem.on{background:var(--panel);box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.ditem .t{font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ditem .m{font-size:11.5px;color:var(--muted);margin-top:2px}
+.tag{display:inline-block;font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:4px;color:#fff}
+.tag.mbj{background:var(--mbj)}.tag.cover{background:var(--cover)}.tag.email{background:var(--email)}.tag.school{background:var(--school)}
+
+.editor{flex:1;display:flex;flex-direction:column;min-width:0}
+.ehead{display:flex;gap:10px;align-items:center;padding:14px 22px 6px}
+#dTitle{flex:1;border:0;background:transparent;font-family:"Instrument Serif",serif;font-size:30px;padding:4px 0;min-width:0}
+#dTitle:focus{outline:none;border-bottom:1px solid var(--line)}
+#dMode{border:1px solid var(--line);border-radius:7px;padding:5px 8px;background:var(--panel)}
+.paper{flex:1;display:flex;padding:6px 22px 0;min-height:0}
+#dText{flex:1;border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:26px 34px;font-family:Literata,Georgia,serif;font-size:17px;line-height:1.75;resize:none;min-height:0}
+#dText:focus{outline:none;border-color:#cdc3b1;box-shadow:0 0 0 3px rgba(140,29,47,.06)}
+.efoot{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:10px 22px 14px;font-size:12.5px;color:var(--muted)}
+.lint{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--warn-soft);background:var(--warn-soft);color:var(--warn);border-radius:12px;padding:2px 9px;font-size:12px;cursor:pointer}
+.chip.ok{background:var(--ok-soft);border-color:var(--ok-soft);color:var(--ok);cursor:default}
+.empty{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;color:var(--muted);text-align:center;padding:30px}
+.empty h2{font-family:"Instrument Serif",serif;font-weight:400;font-size:34px;color:var(--ink);margin:0}
+
+.ai{width:360px;border-left:1px solid var(--line);background:#faf6ef;overflow:auto;display:flex;flex-direction:column}
+.sec{padding:14px 16px;border-bottom:1px solid var(--line)}
+.sec h3{margin:0 0 8px;font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;display:flex;align-items:center;gap:6px}
+.field{margin-bottom:8px}
+.field label{display:block;font-size:12px;font-weight:600;margin-bottom:3px}
+.field input,.field textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:7px 9px;background:var(--panel)}
+.field textarea{min-height:56px;resize:vertical;line-height:1.45}
+.acts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.acts .btn{justify-content:flex-start;font-size:13px}
+.acts .wide{grid-column:1/-1;justify-content:center}
+.scope{font-size:12px;color:var(--muted);margin:8px 0 0}
+.scope b{color:var(--ink)}
+.ask{display:flex;gap:6px;margin-top:8px}
+.ask input{flex:1;border:1px solid var(--line);border-radius:7px;padding:7px 9px;background:var(--panel)}
+#out{display:none}
+#out.on{display:block}
+.outbox{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-family:Literata,Georgia,serif;font-size:15px;line-height:1.6;white-space:pre-wrap;max-height:420px;overflow:auto}
+.outbox.thinking{color:var(--muted);font-style:italic}
+.outacts{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.notice{font-size:12.5px;color:var(--muted);background:var(--soft);border-radius:8px;padding:9px 11px;line-height:1.45}
+.notice.warn{background:var(--warn-soft);color:var(--warn)}
+
+/* VOICE */
+.voice{flex:1;overflow:auto;padding:24px 28px 60px}
+.vgrid{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:1240px;margin:0 auto}
+@media(max-width:1000px){.vgrid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+.card h2{font-family:"Instrument Serif",serif;font-weight:400;font-size:24px;margin:0 0 4px}
+.card p.sub{color:var(--muted);margin:0 0 12px;line-height:1.45}
+.card textarea{width:100%;border:1px solid var(--line);border-radius:9px;padding:10px 12px;background:#fff;line-height:1.55;resize:vertical}
+.card.full{grid-column:1/-1}
+.vhero{max-width:1240px;margin:0 auto 18px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.vhero h1{font-family:"Instrument Serif",serif;font-weight:400;font-size:38px;margin:0}
+.steps{display:flex;gap:8px;flex-wrap:wrap}
+.step{display:flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:5px 12px;font-size:12.5px}
+.step .n{width:20px;height:20px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-weight:600;font-size:11px}
+.step.done .n{background:var(--ok);color:#fff}
+.sample{border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:10px;background:#fff}
+.sample input{width:100%;border:0;border-bottom:1px solid var(--soft);padding:4px 2px 7px;font-weight:600;background:transparent}
+.sample input:focus{outline:none}
+.sample textarea{border:0;padding:8px 2px 2px;min-height:90px;font-family:Literata,Georgia,serif;font-size:14px}
+.sample textarea:focus{outline:none}
+.srow{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted)}
+.lesson{display:flex;gap:8px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--soft)}
+.lesson span{flex:1;line-height:1.45}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:700px){.modes{grid-template-columns:1fr}}
+.modes label{display:flex;align-items:center;gap:8px;font-weight:600;margin-bottom:5px}
+#profile{font-family:Literata,Georgia,serif;font-size:14.5px}
+.modal{position:fixed;inset:0;background:rgba(31,27,22,.35);display:none;align-items:center;justify-content:center;z-index:40;padding:20px}
+.modal.on{display:flex}
+.mbox{background:var(--panel);border-radius:16px;padding:22px 24px;width:520px;max-width:100%;max-height:90vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.mh{font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:18px 0 6px}
+.mp{color:var(--muted);line-height:1.5;margin:0 0 8px;font-size:13px}
+.mp a{color:var(--accent)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--ink);color:#fff;padding:9px 15px;border-radius:8px;opacity:0;transition:.25s;pointer-events:none;z-index:50;font-size:13px}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:1100px){.ai{width:310px}.side{width:210px}}
+@media(max-width:820px){.view.on#v-write{flex-direction:column}.side,.ai{width:auto;max-height:none}.side{border-right:0;border-bottom:1px solid var(--line)}.dlist{max-height:180px}#dText{min-height:380px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <div class="brand">Lexi's <i>Writing</i> Studio</div>
+    <nav class="tabs"><button data-v="write" class="on">Write</button><button data-v="voice">My Voice</button></nav>
+    <div class="grow"></div>
+    <div class="status" id="status"><span class="d"></span>Connecting…</div>
+    <button class="btn sm" id="setBtn" title="Settings">⚙ Settings</button>
+  </div>
+
+  <!-- WRITE -->
+  <section class="view on" id="v-write">
+    <aside class="side">
+      <div class="newmenu">
+        <button data-new="mbj"><b>+ MBJ article</b>Journal piece</button>
+        <button data-new="cover"><b>+ Cover letter</b>Apps &amp; essays</button>
+        <button data-new="email"><b>+ Email</b>Messages</button>
+        <button data-new="school"><b>+ School</b>Reports, memos</button>
+      </div>
+      <input class="search" id="search" placeholder="Search drafts…">
+      <div class="dlist" id="dlist"></div>
+    </aside>
+
+    <div class="editor" id="editor"></div>
+
+    <aside class="ai" id="aiPanel"></aside>
+  </section>
+
+  <!-- VOICE -->
+  <section class="view" id="v-voice">
+    <div class="voice">
+      <div class="vhero">
+        <h1>How Lexi writes</h1>
+        <div class="steps" id="steps"></div>
+      </div>
+      <div class="vgrid">
+        <div class="card">
+          <h2>Your rules</h2>
+          <p class="sub">The things that should be true of everything you write. One per line.</p>
+          <textarea id="rules" rows="9"></textarea>
+        </div>
+        <div class="card">
+          <h2>Voice profile</h2>
+          <p class="sub">Built from your rules and samples. Every draft uses this, so edit anything that feels off.</p>
+          <textarea id="profile" rows="9" placeholder="Add a few samples, then build your profile →"></textarea>
+          <div style="display:flex;gap:8px;margin-top:10px;align-items:center;flex-wrap:wrap">
+            <button class="btn primary" id="buildProfile">Build profile from samples</button>
+            <button class="btn" id="undoProfile" style="display:none">Undo last update</button>
+            <span class="status" id="profileNote"></span>
+          </div>
+          <div class="status" id="profileStamp" style="margin-top:6px"></div>
+        </div>
+        <div class="card full">
+          <h2>Writing samples</h2>
+          <p class="sub">Paste 3 to 5 pieces you're proud of: a published MBJ article, a cover letter that worked, a strong email. Mix the types so it learns your range.</p>
+          <div id="samples"></div>
+          <button class="btn" id="addSample">+ Add sample</button>
+        </div>
+        <div class="card">
+          <h2>Learned from your edits</h2>
+          <p class="sub">When you rework an AI draft, it notices and offers to learn from your edits. New lessons land here, and once 6 pile up they're folded into your voice profile automatically.</p>
+          <label style="display:flex;gap:10px;align-items:flex-start;background:var(--soft);border-radius:9px;padding:10px 12px;margin-bottom:10px;cursor:pointer">
+            <input type="checkbox" id="autoLearn" style="margin-top:3px">
+            <span><b>Learn automatically</b><br><span style="color:var(--muted);font-size:12.5px">Skip the prompt: when you've reworked a draft and stop typing, it learns on its own and saves the lessons here for you to review.</span></span>
+          </label>
+          <div id="lessons"></div>
+          <button class="btn sm" id="foldNow" style="margin-top:10px">Fold lessons into profile now</button>
+        </div>
+        <div class="card">
+          <h2>Background &amp; proof points</h2>
+          <p class="sub">Facts about you that cover letters, bios and outreach emails can draw on. Paste in your Academic &amp; Career Profile doc to give it more to work with.</p>
+          <textarea id="background" rows="12" placeholder="Your degree, roles, internships, projects, results with numbers, strengths… Paste your Academic &amp; Career Profile here."></textarea>
+        </div>
+        <div class="card full">
+          <h2>Mode guides</h2>
+          <p class="sub">Extra rules for each kind of writing, on top of your voice.</p>
+          <div class="modes">
+            <div><label><span class="tag mbj">MBJ</span> Articles</label><textarea id="mode-mbj" rows="5"></textarea></div>
+            <div><label><span class="tag cover">Cover</span> Cover letters &amp; apps</label><textarea id="mode-cover" rows="5"></textarea></div>
+            <div><label><span class="tag email">Email</span> Emails &amp; messages</label><textarea id="mode-email" rows="5"></textarea></div>
+            <div><label><span class="tag school">School</span> Assignments</label><textarea id="mode-school" rows="5"></textarea></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="modal" id="settings"><div class="mbox">
+  <div style="display:flex;align-items:center;margin-bottom:6px"><h2 style="margin:0;font-family:'Instrument Serif',serif;font-weight:400;font-size:28px">Settings</h2><span class="grow"></span><button class="btn ghost sm" id="setClose">Close ✕</button></div>
+  <div class="notice warn" id="setMsg" style="display:none;margin-bottom:10px"></div>
+  <div id="keyRow">
+    <h3 class="mh">AI · Anthropic API key</h3>
+    <p class="mp">Get a key at <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com</a> → API Keys. You pay per use, usually a few cents per draft. The key is saved only in this browser on this computer. It is never uploaded to GitHub or anywhere else.</p>
+    <div style="display:flex;gap:6px"><input id="keyIn" type="password" placeholder="sk-ant-…" autocomplete="off" spellcheck="false" style="flex:1;border:1px solid var(--line);border-radius:7px;padding:8px 10px;font-family:monospace"><button class="btn sm" id="keyShow">Show</button></div>
+    <div style="display:flex;gap:6px;margin-top:8px;align-items:center;flex-wrap:wrap"><button class="btn sm primary" id="keyTest">Test key</button><button class="btn sm ghost" id="keyClear">Remove key</button><span class="status" id="testOut"></span></div>
+    <h3 class="mh">Model</h3>
+    <select id="modelIn" style="width:100%;border:1px solid var(--line);border-radius:7px;padding:8px"></select>
+  </div>
+  <h3 class="mh">Backup</h3>
+  <p class="mp">Your drafts and voice live in this browser on this computer. Download a backup now and then (and before clearing Safari data) so nothing gets lost. Restore one here on any computer.</p>
+  <div style="display:flex;gap:6px"><button class="btn sm" id="exportBtn">Download backup</button><button class="btn sm" id="importBtn">Restore from backup…</button><input type="file" id="importFile" accept=".json,application/json" hidden></div>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+/* ================= constants ================= */
+const MODES = {
+  mbj:   {label:'MBJ article',  short:'MBJ',   fields:[['topic','Story angle','What is the piece about, and why now?'],['notes','Reporting notes, quotes & facts','Paste interview quotes, stats, sources…'],['audience','Audience','Cox students, alumni, Dallas business readers'],['length','Length','e.g. 700–900 words']]},
+  cover: {label:'Cover letter', short:'Cover', fields:[['topic','Role & company','e.g. Analyst, Jabian Consulting'],['posting','Job posting','Paste the posting or its key requirements'],['notes','Angle & proof points to use','What should they remember about you?'],['length','Length','e.g. under 350 words']]},
+  email: {label:'Email',        short:'Email', fields:[['topic','What do you need?','e.g. ask for a 15-min coffee chat'],['recipient','Who is it to?','Name, role, how you know them'],['notes','Details to include',''],['length','Length','e.g. under 120 words']]},
+  school:{label:'School',       short:'School',fields:[['topic','Assignment prompt','Paste the prompt or rubric'],['notes','Your findings & notes','Data results, arguments, sources…'],['audience','Audience','Professor, client, class'],['length','Length','e.g. 2 pages, 1,000 words']]}
+};
+const DEFAULT_VOICE = {
+  rules: [
+    'Never use em dashes. Use commas, periods, colons or parentheses instead.',
+    'No AI-sounding language: no "delve," "tapestry," "testament," "navigate the landscape," "in today\'s fast-paced world," "I am excited to," "leverage," "moreover."',
+    'Polished but human. It should sound like a sharp person talking, not a press release.',
+    'Lead with the strongest angle. No warm-up sentences.',
+    'Use concrete proof points: numbers, names, specific results.',
+    'Keep prose tight. Cut filler, hedges and throat-clearing.'
+  ].join('\n'),
+  profile: '',
+  samples: [],
+  lessons: [],
+  autoLearn: false,
+  profileHistory: [],
+  profileUpdated: 0,
+  background: '',
+  modes: {
+    mbj: 'Journalistic: open with a sharp lede, put the news or tension up top, attribute facts and quotes clearly. Short paragraphs. Never invent quotes, numbers or sources: leave [TK] where reporting is missing.',
+    cover: 'Open with why this company and role specifically, not a generic intro. Two or three concrete proof points tied to the posting. Do not open with a dataset size or a stock project summary. Confident, not eager. Close with a specific next step.',
+    email: 'Get to the ask in the first two sentences. Warm but efficient. Easy to answer on a phone. Offer a subject line when it helps.',
+    school: 'Clear structure that follows the prompt or rubric. Analytical and evidence-led. Explain methods plainly. Do not invent data or citations: mark gaps as [TK].'
+  }
+};
+const AI_PHRASES = ['delve','tapestry','testament to','navigate the','navigating the','landscape','in today\'s','fast-paced','i am excited to','i\'m excited to','leverage','moreover','furthermore','it\'s worth noting','it is worth noting','seamless','robust','pivotal','foster','underscore','showcase','realm','game-changer','game changer','in conclusion','ever-evolving','unlock','elevate','synergy','cutting-edge','not only','plays a crucial role','a crucial role','embark','journey','resonate','dynamic'];
+
+/* ================= state ================= */
+let voice = clone(DEFAULT_VOICE);
+let drafts = [];          // {id,title,mode,brief:{},text,lastAI,updated}
+let currentId = null;
+let db = null, uid = null, sample = null, downloads = null;
+let backend = 'local';    // 'db' | 'local'
+let busy = false, abortCtl = null, lastOut = null; // lastOut: {text, kind, range}
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function clone(o){ return JSON.parse(JSON.stringify(o)); }
+function toast(m){ const t=$('#toast'); t.textContent=m; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2200); }
+function newId(){ return 'd' + Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+const cur = () => drafts.find(d => d.id === currentId);
+
+/* ================= AI layer: claude.ai capability, or your own API key ================= */
+const KEY_STORE = 'lexi-studio.apikey', MODEL_STORE = 'lexi-studio.model';
+const MODELS = {'claude-sonnet-5-5':'Sonnet 5.5 (fast, recommended)', 'claude-opus-5-5':'Opus 5.5 (best writing, costs more)', 'claude-haiku-5-5':'Haiku 5.5 (cheapest)'};
+function getKey(){ try{ return localStorage.getItem(KEY_STORE) || ''; }catch(e){ return ''; } }
+function getModel(){ try{ return localStorage.getItem(MODEL_STORE) || 'claude-sonnet-5-5'; }catch(e){ return 'claude-sonnet-5-5'; } }
+function aiReady(){ return !!sample || !!getKey(); }
+async function aiText(prompt, opts={}){
+  if(sample) return sample(prompt, opts);
+  return apiText(prompt, opts);
+}
+async function aiJSON(prompt, opts={}){
+  if(sample) return sample.json(prompt, opts);
+  const r = await apiText(prompt + '\n\nReturn only the JSON object, nothing else.', opts);
+  const m = r.text.match(/\{[\s\S]*\}/);
+  if(!m) throw {code:'bad_output', message:'No JSON in reply'};
+  return JSON.parse(m[0]);
+}
+async function apiText(prompt, opts={}){
+  const key = getKey();
+  if(!key) throw {code:'no_key', message:'No API key'};
+  let res;
+  try{
+    res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST', signal: opts.signal,
+      headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body: JSON.stringify({model:getModel(), max_tokens: opts.modelTier==='complex' ? 6000 : 4000, stream:true, messages:[{role:'user', content:prompt}]})
+    });
+  }catch(e){ if(e && e.name==='AbortError') throw e; throw {code:'network', message:'Couldn\'t reach Anthropic. Check your internet connection.'}; }
+  if(!res.ok){
+    let msg = ''; try{ msg = (await res.json()).error?.message || ''; }catch(e){}
+    if(res.status===401) throw {code:'bad_key', message:'That API key was rejected. Check it in Settings.'};
+    if(res.status===429) throw {code:'rate_limited', message:'Rate limited.'};
+    if(res.status===400 && /credit/i.test(msg)) throw {code:'no_credit', message:'Your Anthropic account is out of credit. Add some at console.anthropic.com.'};
+    throw {code:'api_error', message: msg || ('Error ' + res.status)};
+  }
+  const reader = res.body.getReader(), dec = new TextDecoder();
+  let buf = '', text = '';
+  try{
+    while(true){
+      const {value, done} = await reader.read(); if(done) break;
+      buf += dec.decode(value, {stream:true});
+      let i;
+      while((i = buf.indexOf('\n')) >= 0){
+        const line = buf.slice(0, i).trim(); buf = buf.slice(i+1);
+        if(!line.startsWith('data:')) continue;
+        let ev; try{ ev = JSON.parse(line.slice(5)); }catch(e){ continue; }
+        if(ev.type==='content_block_delta' && ev.delta && ev.delta.type==='text_delta'){ text += ev.delta.text; opts.onText && opts.onText({text, delta:ev.delta.text}); }
+        if(ev.type==='error') throw {code:'api_error', message: ev.error?.message || 'Stream error', text};
+      }
+    }
+  }catch(e){ if(text && e && e.name==='AbortError') throw Object.assign(e, {text}); throw e; }
+  return {text, truncated:false};
+}
+function aiErrorText(e){
+  if(!e) return 'Something went wrong. Try again.';
+  if(e.name==='AbortError') return 'Stopped.';
+  if(e.code==='rate_limited') return 'Hit the rate limit. Give it a minute and try again.';
+  if(e.code==='not_granted') return 'AI access wasn\'t granted. Reload and allow it.';
+  return e.message || 'Something went wrong. Try again.';
+}
+
+/* ================= settings & backup ================= */
+function openSettings(msg){
+  $('#setMsg').textContent = msg || '';
+  $('#setMsg').style.display = msg ? 'block' : 'none';
+  $('#keyIn').value = getKey();
+  $('#modelIn').innerHTML = Object.entries(MODELS).map(([k,v]) => `<option value="${k}" ${k===getModel()?'selected':''}>${v}</option>`).join('');
+  $('#keyRow').style.display = sample ? 'none' : 'block';
+  $('#testOut').textContent = '';
+  $('#settings').classList.add('on');
+}
+function closeSettings(){ $('#settings').classList.remove('on'); renderAll(); renderVoice(); }
+$('#setBtn').onclick = () => openSettings();
+$('#setClose').onclick = closeSettings;
+$('#settings').onclick = e => { if(e.target.id==='settings') closeSettings(); };
+$('#keyIn').oninput = e => { try{ localStorage.setItem(KEY_STORE, e.target.value.trim()); }catch(_){} };
+$('#modelIn').onchange = e => { try{ localStorage.setItem(MODEL_STORE, e.target.value); }catch(_){} };
+$('#keyShow').onclick = () => { const k = $('#keyIn'); k.type = k.type==='password' ? 'text' : 'password'; };
+$('#keyTest').onclick = async () => {
+  $('#testOut').textContent = 'Testing…';
+  try{ const r = await apiText('Reply with exactly: ready', {}); $('#testOut').textContent = /ready/i.test(r.text) ? '✓ Key works. AI is on.' : '✓ Connected.'; }
+  catch(e){ $('#testOut').textContent = '✕ ' + aiErrorText(e); }
+};
+$('#keyClear').onclick = () => { try{ localStorage.removeItem(KEY_STORE); }catch(_){} $('#keyIn').value=''; $('#testOut').textContent = 'Key removed from this browser.'; };
+$('#exportBtn').onclick = () => {
+  const blob = new Blob([JSON.stringify({app:'lexi-writing-studio', version:1, exported:new Date().toISOString(), voice, drafts}, null, 2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `writing-studio-backup-${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  try{ localStorage.setItem('lexi-studio.lastBackup', String(Date.now())); }catch(_){}
+  toast('Backup downloaded');
+};
+$('#importBtn').onclick = () => $('#importFile').click();
+$('#importFile').onchange = async e => {
+  const f = e.target.files[0]; if(!f) return;
+  try{
+    const data = JSON.parse(await f.text());
+    if(!data || !data.voice || !Array.isArray(data.drafts)) throw 0;
+    voice = Object.assign(clone(DEFAULT_VOICE), data.voice);
+    const have = new Set(drafts.map(d => d.id));
+    data.drafts.forEach(d => { if(!have.has(d.id)) drafts.push(d); else drafts[drafts.findIndex(x=>x.id===d.id)] = d; });
+    saveVoice(); drafts.forEach(saveDraft); localSave();
+    toast(`Restored ${data.drafts.length} draft${data.drafts.length===1?'':'s'} and your voice`); closeSettings();
+  }catch(_){ toast('That file isn\'t a Writing Studio backup'); }
+  e.target.value = '';
+};
+
+/* ================= storage ================= */
+const LKEY = 'lexi-studio.v1';
+function localSave(){ try{ localStorage.setItem(LKEY, JSON.stringify({voice, drafts})); }catch(e){} }
+function localLoad(){ try{ const s = JSON.parse(localStorage.getItem(LKEY)||'null'); if(s){ if(s.voice) voice = Object.assign(clone(DEFAULT_VOICE), s.voice); if(Array.isArray(s.drafts)) drafts = s.drafts; } }catch(e){} }
+
+// one-write-at-a-time per doc, debounced
+const writers = {};
+function queueWrite(key, refFn, dataFn, delay=700){
+  localSave();
+  if(backend !== 'db') return;
+  const w = writers[key] || (writers[key] = {timer:null, running:false, again:false});
+  clearTimeout(w.timer);
+  w.timer = setTimeout(() => run(w, refFn, dataFn), delay);
+}
+async function run(w, refFn, dataFn){
+  if(w.running){ w.again = true; return; }
+  w.running = true;
+  try{ await refFn().set(dataFn()); setStatus('saved'); }
+  catch(e){
+    if(e && e.code === 'quota_exceeded') toast('Storage is full: delete a few old drafts.');
+    else if(e && (e.code === 'revoked' || e.code === 'invalid_argument' || e.code === 'not_granted')){ backend='local'; setStatus('local'); }
+  }
+  w.running = false;
+  if(w.again){ w.again = false; run(w, refFn, dataFn); }
+}
+const voiceRef = () => db.doc(`data/users/${uid}/voice`);
+const draftsCol = () => db.doc(`data/users/${uid}/workspace`).collection('drafts');
+function saveVoice(){ queueWrite('voice', voiceRef, () => clone(voice)); }
+function saveDraft(d){ d.updated = Date.now(); queueWrite('d:'+d.id, () => draftsCol().doc(d.id), () => clone(d)); }
+async function deleteDraftStore(id){ localSave(); if(backend==='db'){ try{ await draftsCol().doc(id).delete(); }catch(e){} } }
+
+function setStatus(s){
+  const el = $('#status');
+  el.className = 'status ' + (backend==='db' ? 'on' : 'local');
+  el.innerHTML = '<span class="d"></span>' + (backend==='db' ? (s==='saved' ? 'Saved to your account' : 'Synced to your account') : 'Saved on this computer');
+}
+
+async function initBackend(){
+  localLoad();
+  try{
+    if(typeof claude === 'undefined' || !claude.use) throw new Error('standalone');
+    const [d, u, s, dl] = await Promise.all([claude.use('db'), claude.use('user'), claude.use('sample'), claude.use('downloads')]);
+    sample = s; downloads = dl;
+    if(d && u){ uid = await u.id(); }
+    if(d && uid){
+      db = d;
+      const timeout = new Promise((_, rej) => setTimeout(() => rej({code:'timeout'}), 10000));
+      const [vs, ds] = await Promise.race([Promise.all([voiceRef().get(), draftsCol().get()]), timeout]);
+      backend = 'db';
+      const hadLocal = drafts.length || voice.samples.length || voice.profile;
+      if(vs.exists){ voice = Object.assign(clone(DEFAULT_VOICE), vs.data()); }
+      if(!ds.empty){ drafts = ds.docs.map(x => clone(x.data())); }
+      // first visit on this account: move anything typed before sign-in up
+      if(!vs.exists && hadLocal){ saveVoice(); }
+      if(ds.empty && drafts.length){ drafts.forEach(saveDraft); }
+      localSave();
+    }
+  }catch(e){ backend = 'local'; }
+  setStatus();
+  renderAll();
+}
+
+/* ================= rendering: drafts ================= */
+function renderList(){
+  const q = $('#search').value.trim().toLowerCase();
+  const list = drafts.filter(d => !q || (d.title+' '+d.text).toLowerCase().includes(q)).sort((a,b)=>b.updated-a.updated);
+  if(!list.length){ $('#dlist').innerHTML = `<div style="color:var(--muted);font-size:12.5px;padding:10px">${drafts.length?'No matches.':'No drafts yet. Start one above.'}</div>`; return; }
+  $('#dlist').innerHTML = list.map(d => `<div class="ditem ${d.id===currentId?'on':''}" data-id="${d.id}" style="border-left-color:var(--${d.mode})">
+     <div class="t">${esc(d.title||'Untitled')}</div>
+     <div class="m"><span class="tag ${d.mode}">${MODES[d.mode].short}</span> · ${wordCount(d.text)} words · ${ago(d.updated)}</div></div>`).join('');
+}
+function ago(t){ const s=(Date.now()-t)/1000; if(s<60) return 'just now'; if(s<3600) return Math.floor(s/60)+'m ago'; if(s<86400) return Math.floor(s/3600)+'h ago'; return new Date(t).toLocaleDateString('en-US',{month:'short',day:'numeric'}); }
+function wordCount(t){ return (t||'').trim() ? t.trim().split(/\s+/).length : 0; }
+
+function renderEditor(){
+  const d = cur();
+  if(!d){
+    $('#editor').innerHTML = `<div class="empty"><h2>What are we writing?</h2><div>Pick a type on the left. Each one knows its own structure and pulls from your voice profile.</div>${!voice.profile && !voice.samples.length ? '<button class="btn primary" id="gotoVoice" style="margin-top:8px">First, teach it your voice →</button>' : ''}</div>`;
+    const g = $('#gotoVoice'); if(g) g.onclick = () => showView('voice');
+    return;
+  }
+  $('#editor').innerHTML = `
+    <div class="ehead">
+      <input id="dTitle" value="${esc(d.title)}" placeholder="Untitled">
+      <select id="dMode">${Object.entries(MODES).map(([k,m])=>`<option value="${k}" ${k===d.mode?'selected':''}>${m.label}</option>`).join('')}</select>
+      <button class="btn ghost sm" id="delDraft" title="Delete draft">Delete</button>
+    </div>
+    <div class="paper"><textarea id="dText" placeholder="Start writing, or fill in the brief on the right and let it draft in your voice.">${esc(d.text)}</textarea></div>
+    <div class="efoot"><span id="wc"></span><span class="lint" id="lint"></span><span class="grow"></span>
+      <button class="btn sm" id="copyText">Copy</button>
+      ${downloads ? '<button class="btn sm" id="dlText">Download .txt</button>' : ''}
+    </div>`;
+  $('#dTitle').oninput = e => { d.title = e.target.value; saveDraft(d); renderList(); };
+  $('#dMode').onchange = e => { d.mode = e.target.value; saveDraft(d); renderList(); renderAI(); };
+  $('#dText').oninput = e => { d.text = e.target.value; saveDraft(d); updateFoot(); renderListSoon(); checkEditsSoon(); };
+  ['select','keyup','mouseup'].forEach(ev => $('#dText').addEventListener(ev, updateScope));
+  let armed = false;
+  $('#delDraft').onclick = e => {
+    if(!armed){ armed = true; e.target.textContent = 'Click to confirm'; setTimeout(()=>{armed=false; if(e.target) e.target.textContent='Delete';},2500); return; }
+    drafts = drafts.filter(x => x.id !== d.id); deleteDraftStore(d.id); currentId = null; renderAll(); toast('Draft deleted');
+  };
+  $('#copyText').onclick = () => copy(d.text);
+  const dl = $('#dlText'); if(dl) dl.onclick = async () => { try{ await downloads.save({filename:(d.title||'draft').replace(/[^\w\- ]+/g,'').trim()+'.txt', data:d.text}); }catch(e){} };
+  updateFoot();
+}
+let listTimer; function renderListSoon(){ clearTimeout(listTimer); listTimer = setTimeout(renderList, 600); }
+
+function lintText(t){
+  const hits = [];
+  const em = (t.match(/—|–| -- /g)||[]).length;
+  if(em) hits.push({label:`${em} em dash${em>1?'es':''}`, find:/—|–| -- /});
+  const low = t.toLowerCase();
+  AI_PHRASES.forEach(p => { const i = low.indexOf(p); if(i>=0){ const n = low.split(p).length-1; hits.push({label:`"${p}"${n>1?' ×'+n:''}`, find:p}); } });
+  return hits;
+}
+function updateFoot(){
+  const d = cur(); if(!d) return;
+  $('#wc').textContent = `${wordCount(d.text)} words`;
+  const hits = d.text.trim() ? lintText(d.text) : [];
+  $('#lint').innerHTML = !d.text.trim() ? '' : hits.length ? hits.map((h,i)=>`<span class="chip" data-i="${i}" title="Click to select it, then rewrite">${esc(h.label)}</span>`).join('') : '<span class="chip ok">✓ No em dashes or AI tells</span>';
+  $('#lint').onclick = e => {
+    const c = e.target.closest('.chip[data-i]'); if(!c) return;
+    const h = hits[+c.dataset.i], ta = $('#dText');
+    let i, len;
+    if(h.find instanceof RegExp){ const m = d.text.match(h.find); i = m ? m.index : -1; len = m ? m[0].length : 0; }
+    else { i = d.text.toLowerCase().indexOf(h.find); len = h.find.length; }
+    if(i < 0) return;
+    // expand to the sentence so "Rewrite" has context
+    let a = i; while(a>0 && !/[.!?\n]/.test(d.text[a-1])) a--; while(/\s/.test(d.text[a]||'')) a++;
+    let b = i+len; while(b<d.text.length && !/[.!?\n]/.test(d.text[b])) b++; if(b<d.text.length && d.text[b]!=='\n') b++;
+    ta.focus(); ta.setSelectionRange(a, b); updateScope();
+    toast('Sentence selected: use “Sound like me” or tell it what to fix');
+  };
+}
+
+/* ================= rendering: AI panel ================= */
+function renderAI(){
+  const d = cur();
+  if(!d){ $('#aiPanel').innerHTML = `<div class="sec"><h3>Your voice</h3><div class="notice">${voice.profile ? 'Voice profile ready. Every draft is written from it.' : 'No voice profile yet. Add a few samples in <b>My Voice</b> so drafts sound like you.'}</div></div>`; return; }
+  const m = MODES[d.mode];
+  d.brief = d.brief || {};
+  const extra = d.mode==='mbj' ? '<button class="btn" data-act="headlines">Headlines + dek</button>' :
+                d.mode==='email' ? '<button class="btn" data-act="subjects">Subject lines</button>' :
+                d.mode==='cover' ? '<button class="btn" data-act="fit">Check fit vs. posting</button>' :
+                '<button class="btn" data-act="outline">Outline from prompt</button>';
+  $('#aiPanel').innerHTML = `
+    <div id="learnBanner"></div>
+    <div class="sec"><h3>Brief ·<span class="tag ${d.mode}">${m.short}</span></h3>
+      ${m.fields.map(([k,l,ph]) => `<div class="field"><label>${l}</label>${k==='notes'||k==='posting'||(k==='topic'&&d.mode==='school') ? `<textarea data-b="${k}" placeholder="${esc(ph)}">${esc(d.brief[k]||'')}</textarea>` : `<input data-b="${k}" placeholder="${esc(ph)}" value="${esc(d.brief[k]||'')}">`}</div>`).join('')}
+    </div>
+    <div class="sec"><h3>Write with AI</h3>
+      ${aiReady() ? '' : '<div class="notice warn" style="margin-bottom:8px">AI is off until you add your Anthropic API key. <a href="#" id="keyLink" style="color:inherit;font-weight:600">Open settings →</a></div>'}
+      <div class="acts">
+        <button class="btn primary wide" data-act="draft">✦ Write a draft in my voice</button>
+        <button class="btn" data-act="continue">Continue writing</button>
+        <button class="btn" data-act="tighten">Tighten</button>
+        <button class="btn" data-act="voice">Sound like me</button>
+        <button class="btn" data-act="critique">Voice check</button>
+        ${extra}
+        <button class="btn" data-act="teach">Teach from my edits</button>
+      </div>
+      <p class="scope" id="scope"></p>
+      <div class="ask"><input id="askIn" placeholder="Tell it what to change… e.g. punchier opener"><button class="btn" data-act="ask">Go</button></div>
+    </div>
+    <div class="sec" id="out"><h3>Suggestion <span class="grow"></span><button class="btn ghost sm" id="stopBtn" style="display:none">Stop</button></h3>
+      <div class="outbox" id="outbox"></div>
+      <div class="outacts" id="outacts"></div>
+    </div>`;
+  $('#aiPanel').querySelectorAll('[data-b]').forEach(el => el.oninput = () => { d.brief[el.dataset.b] = el.value; saveDraft(d); });
+  $('#aiPanel').querySelectorAll('[data-act]').forEach(b => b.onclick = () => runAction(b.dataset.act));
+  $('#askIn').onkeydown = e => { if(e.key==='Enter') runAction('ask'); };
+  $('#stopBtn').onclick = () => abortCtl && abortCtl.abort();
+  const kl = $('#keyLink'); if(kl) kl.onclick = e => { e.preventDefault(); openSettings(); };
+  updateScope();
+  renderLearnBanner();
+}
+
+/* ================= noticing edits ================= */
+function words(t){ return (t||'').toLowerCase().match(/[a-z0-9’'$%.,-]+/g) || []; }
+function editStats(a, b){
+  const A = words(a), B = words(b);
+  if(!A.length) return {ratio:0, changed:0};
+  const bag = new Map(); A.forEach(w => bag.set(w, (bag.get(w)||0)+1));
+  let common = 0; B.forEach(w => { const n = bag.get(w); if(n){ common++; bag.set(w, n-1); } });
+  const changed = (A.length - common) + (B.length - common);
+  return {ratio: changed / (A.length + B.length), changed};
+}
+function editsWorthLearning(d){
+  if(!d || !d.lastAI || !d.text.trim()) return null;
+  const s = editStats(d.lastAI, d.text);
+  const floor = (d.dismissRatio || 0) + 0.12;
+  return (s.ratio >= Math.max(0.12, floor) && s.changed >= 20) ? s : null;
+}
+let editTimer, idleTimer;
+function checkEditsSoon(){
+  clearTimeout(editTimer); clearTimeout(idleTimer);
+  editTimer = setTimeout(renderLearnBanner, 900);
+  // auto-learn waits until she's stopped typing for a bit
+  if(voice.autoLearn && aiReady()) idleTimer = setTimeout(() => {
+    const d = cur(); if(d && editsWorthLearning(d) && !busy) teach(d, {auto:true});
+  }, 25000);
+}
+function renderLearnBanner(){
+  const el = $('#learnBanner'); if(!el) return;
+  const d = cur(), s = editsWorthLearning(d);
+  if(!s || !aiReady()){ el.innerHTML = ''; return; }
+  const pct = Math.round(s.ratio * 100);
+  el.innerHTML = `<div class="sec" style="background:var(--ok-soft)"><h3 style="color:var(--ok)">✦ You've reworked this draft</h3>
+    <div style="font-size:13px;line-height:1.45;margin-bottom:8px">About ${pct}% changed from the AI version${voice.autoLearn ? '. It will learn from these edits once you pause typing.' : '. Want it to learn how you edit?'}</div>
+    <div style="display:flex;gap:6px">${voice.autoLearn ? '<button class="btn sm primary" id="lbGo">Learn now</button>' : '<button class="btn sm primary" id="lbGo">Learn from my edits</button>'}<button class="btn sm ghost" id="lbNo">Not now</button></div></div>`;
+  $('#lbGo').onclick = () => teach(d);
+  $('#lbNo').onclick = () => { d.dismissRatio = s.ratio; saveDraft(d); renderLearnBanner(); };
+}
+function selRange(){
+  const ta = $('#dText'); if(!ta) return null;
+  const a = ta.selectionStart, b = ta.selectionEnd;
+  return (b - a > 2) ? {a, b, text: ta.value.slice(a,b)} : null;
+}
+function updateScope(){
+  const el = $('#scope'); if(!el) return;
+  const r = selRange();
+  el.innerHTML = r ? `Working on <b>your selection</b> (${wordCount(r.text)} words).` : 'Working on <b>the whole draft</b>. Select text to work on just part of it.';
+}
+
+/* ================= prompting ================= */
+function voiceBlock(mode){
+  const parts = [];
+  parts.push(`WRITER: Lexi Loughlin. You are ghostwriting AS her. The result must read like she wrote it herself.`);
+  parts.push(`HER RULES (must follow every one):\n${voice.rules}`);
+  if(voice.profile.trim()) parts.push(`HER VOICE PROFILE:\n${voice.profile}`);
+  if(voice.lessons.length) parts.push(`LESSONS FROM HOW SHE EDITS AI DRAFTS (follow these closely):\n- ${voice.lessons.join('\n- ')}`);
+  const ex = voice.samples.filter(s => s.text.trim()).slice(0,4);
+  if(ex.length) parts.push(`EXCERPTS OF HER REAL WRITING (match rhythm, word choice, sentence length; do not copy content):\n` + ex.map(s => `--- ${s.title||'Sample'} ---\n${s.text.slice(0,1800)}`).join('\n\n'));
+  parts.push(`THIS PIECE IS: ${MODES[mode].label}. Mode guide:\n${voice.modes[mode]||''}`);
+  if(mode==='cover' || mode==='email') parts.push(`HER BACKGROUND (use only true facts from here; never invent experience, numbers or employers):\n${voice.background}`);
+  return parts.join('\n\n');
+}
+function briefBlock(d){
+  const m = MODES[d.mode];
+  const lines = m.fields.map(([k,l]) => d.brief && d.brief[k] && d.brief[k].trim() ? `${l}: ${d.brief[k].trim()}` : null).filter(Boolean);
+  return lines.length ? `BRIEF:\n${lines.join('\n')}` : 'BRIEF: (none given)';
+}
+const OUTPUT_RULE = `OUTPUT: Return only the requested text, ready to paste. No preamble, no notes, no quotation marks around it, no markdown headings unless the piece needs them. Absolutely no em dashes (—) or en dashes used as dashes.`;
+
+function buildPrompt(act, d, r){
+  const ctx = voiceBlock(d.mode) + '\n\n' + briefBlock(d);
+  const draft = d.text.trim();
+  const target = r ? `SELECTED PASSAGE (rewrite only this; it must fit back into the surrounding draft):\n"""${r.text}"""\n\nSURROUNDING DRAFT FOR CONTEXT:\n"""${draft}"""` : `CURRENT DRAFT:\n"""${draft}"""`;
+  switch(act){
+    case 'draft': return `${ctx}\n\n${draft ? `HER ROUGH NOTES / PARTIAL DRAFT TO BUILD FROM:\n"""${draft}"""\n\n` : ''}TASK: Write a complete first draft of this ${MODES[d.mode].label.toLowerCase()} in her voice, following the brief. Where a fact, quote or number is missing, write [TK] rather than inventing it.\n\n${OUTPUT_RULE}`;
+    case 'continue': return `${ctx}\n\nDRAFT SO FAR:\n"""${draft}"""\n\nTASK: Continue the draft from exactly where it stops, in her voice. Write the next 1 to 3 paragraphs only. Do not repeat what's already there.\n\n${OUTPUT_RULE}`;
+    case 'tighten': return `${ctx}\n\n${target}\n\nTASK: Tighten ${r?'the selected passage':'the draft'}. Cut filler, hedges and repetition; sharpen verbs; keep every fact and her meaning. Aim for roughly 20–30% shorter.\n\n${OUTPUT_RULE}`;
+    case 'voice': return `${ctx}\n\n${target}\n\nTASK: Rewrite ${r?'the selected passage':'the draft'} so it sounds unmistakably like her: her rhythm, her word choices, her rules. Remove anything that sounds generic or AI-written. Keep the facts and structure.\n\n${OUTPUT_RULE}`;
+    case 'ask': return `${ctx}\n\n${target}\n\nHER INSTRUCTION: ${$('#askIn').value.trim()}\n\nTASK: Apply her instruction to ${r?'the selected passage':'the draft'}, keeping her voice.\n\n${OUTPUT_RULE}`;
+    case 'critique': return `${ctx}\n\n${target}\n\nTASK: Act as her blunt editor. List up to 8 specific lines that don't sound like her or break her rules (em dashes, AI phrasing, filler, weak opener, vague claims without proof). For each: quote the line, say what's wrong in a few words, give a rewrite in her voice. End with one sentence on the strongest part. Plain text, numbered list, no em dashes.`;
+    case 'headlines': return `${ctx}\n\n${target}\n\nTASK: Give 6 headline options for this MBJ piece (mix of straight-news and sharper/curious) and 2 one-sentence deks. Plain numbered list, no em dashes.`;
+    case 'subjects': return `${ctx}\n\n${target}\n\nTASK: Give 5 subject line options for this email: short, specific, easy to open. Plain numbered list, no em dashes.`;
+    case 'outline': return `${ctx}\n\n${draft ? target + '\n\n' : ''}TASK: Build a tight outline that answers the assignment prompt and rubric point by point: section headings with 1–2 bullet notes each on what goes there and which evidence supports it. Plain text, no em dashes.`;
+    case 'fit': return `${ctx}\n\n${target}\n\nTASK: Compare this cover letter against the job posting in the brief. List: (1) the posting's top 4 requirements and whether the letter proves each one, (2) proof points from her background she should add or swap in, (3) anything generic that could be sent to any company. Be specific and brief. Plain text, no em dashes.`;
+  }
+}
+const REPLACEABLE = ['draft','continue','tighten','voice','ask'];
+
+async function runAction(act){
+  const d = cur(); if(!d || busy) return;
+  if(!aiReady()){ openSettings('Add your Anthropic API key to turn on AI writing.'); return; }
+  if(act==='teach') return teach(d);
+  const r = (act==='draft' || act==='continue' || act==='headlines' || act==='subjects' || act==='outline' || act==='fit') ? null : selRange();
+  if(act!=='draft' && act!=='outline' && !d.text.trim()){ toast('Write or generate a draft first'); return; }
+  if(act==='ask' && !$('#askIn').value.trim()){ $('#askIn').focus(); return; }
+  const prompt = buildPrompt(act, d, r);
+  await stream(prompt, act, r, act==='draft' ? 'complex' : 'default');
+}
+
+async function stream(prompt, kind, range, tier){
+  busy = true; abortCtl = new AbortController();
+  $('#out').classList.add('on'); $('#stopBtn').style.display='inline-flex';
+  const box = $('#outbox'); box.textContent = 'Thinking…'; box.classList.add('thinking'); $('#outacts').innerHTML = '';
+  $('#aiPanel').querySelectorAll('[data-act]').forEach(b => b.disabled = true);
+  $('#out').scrollIntoView({behavior:'smooth', block:'nearest'});
+  let text = '';
+  try{
+    const res = await aiText(prompt, {modelTier: tier, signal: abortCtl.signal, cache:false, onText: ({text:t}) => { text = t; box.classList.remove('thinking'); box.textContent = t; box.scrollTop = box.scrollHeight; }});
+    text = res.text;
+  }catch(e){
+    if(e && e.text) text = e.text;
+    if(e && e.code === 'not_granted'){ box.textContent = 'AI access wasn\'t granted. Reload and allow it to write with Claude.'; finish(); return; }
+    if(e && e.code === 'rate_limited'){ box.textContent = 'Hit the rate limit. Give it a minute and try again.'; finish(); return; }
+    if(!text){ box.classList.remove('thinking'); box.textContent = aiErrorText(e); finish(); if(e && (e.code==='bad_key' || e.code==='no_key')) openSettings(aiErrorText(e)); return; }
+  }
+  text = cleanOut(text);
+  box.classList.remove('thinking'); box.textContent = text;
+  lastOut = {text, kind, range};
+  renderOutActs();
+  finish();
+}
+function finish(){ busy = false; const s = $('#stopBtn'); if(s) s.style.display='none'; $('#aiPanel').querySelectorAll('[data-act]').forEach(b => b.disabled = false); }
+function cleanOut(t){
+  t = t.trim().replace(/^```[a-z]*\n?|```$/g,'').trim();
+  if(/^"[\s\S]*"$/.test(t) && t.split('"').length===3) t = t.slice(1,-1);
+  return t;
+}
+function renderOutActs(){
+  const o = lastOut, d = cur(); if(!o || !d) return;
+  const em = (o.text.match(/—/g)||[]).length;
+  let h = '';
+  if(REPLACEABLE.includes(o.kind)){
+    if(o.range) h += '<button class="btn primary sm" data-o="sel">Replace selection</button>';
+    else if(o.kind==='continue') h += '<button class="btn primary sm" data-o="append">Add to end</button>';
+    else h += `<button class="btn primary sm" data-o="all">${d.text.trim()?'Replace draft':'Use this draft'}</button>`;
+    if(!o.range && o.kind!=='continue' && d.text.trim()) h += '<button class="btn sm" data-o="append">Add to end</button>';
+  }
+  h += '<button class="btn sm" data-o="copy">Copy</button><button class="btn ghost sm" data-o="discard">Discard</button>';
+  if(em) h += `<div class="notice warn" style="width:100%;margin-top:4px">It slipped in ${em} em dash${em>1?'es':''}. They'll be flagged in your draft so you can fix them.</div>`;
+  $('#outacts').innerHTML = h;
+  $('#outacts').onclick = e => {
+    const b = e.target.closest('[data-o]'); if(!b) return;
+    const ta = $('#dText');
+    if(b.dataset.o==='copy') return copy(o.text);
+    if(b.dataset.o==='discard'){ $('#out').classList.remove('on'); lastOut=null; return; }
+    if(b.dataset.o==='all'){ d.text = o.text; }
+    if(b.dataset.o==='append'){ d.text = d.text.replace(/\s*$/,'') + (d.text.trim()?'\n\n':'') + o.text; }
+    if(b.dataset.o==='sel'){
+      const r = o.range;
+      if(d.text.slice(r.a, r.b) === r.text) d.text = d.text.slice(0,r.a) + o.text + d.text.slice(r.b);
+      else { const i = d.text.indexOf(r.text); if(i<0){ toast('That passage changed: copy the suggestion instead'); return; } d.text = d.text.slice(0,i) + o.text + d.text.slice(i+r.text.length); }
+    }
+    d.lastAI = d.text;  // snapshot for "Teach from my edits"
+    if(!d.title || d.title==='Untitled'){ const first = d.text.split('\n').find(l=>l.trim()); if(first && first.length<90 && d.mode==='mbj') d.title = first.replace(/^#+\s*/,''); }
+    ta.value = d.text; saveDraft(d); updateFoot(); renderList();
+    const tt = $('#dTitle'); if(tt) tt.value = d.title;
+    $('#out').classList.remove('on'); lastOut = null;
+    toast('Added. Edit freely, then “Teach from my edits” so it learns.');
+  };
+}
+
+/* ================= teach from edits ================= */
+async function teach(d, opts={}){
+  const auto = !!opts.auto;
+  if(!d.lastAI){ if(!auto) toast('Use an AI suggestion first, edit it your way, then teach'); return; }
+  if(d.lastAI.trim() === d.text.trim()){ if(!auto) toast('No edits since the last AI version yet'); return; }
+  if(busy) return;
+  busy = true;
+  const box = $('#outbox');
+  if(!auto && box){
+    $('#out').classList.add('on'); box.textContent = 'Comparing your edits…'; box.classList.add('thinking'); $('#outacts').innerHTML='';
+    $('#aiPanel').querySelectorAll('[data-act]').forEach(b => b.disabled = true);
+  }
+  try{
+    const prompt = `You are studying how a writer, Lexi, edits AI drafts so future drafts need fewer edits.\n\nHER VOICE PROFILE, RULES AND LESSONS SO FAR (don't repeat anything already covered):\n${voice.profile}\n\n${voice.rules}\n- ${voice.lessons.join('\n- ')}\n\nTHIS PIECE: ${MODES[d.mode].label}\n\nAI VERSION:\n"""${d.lastAI.slice(0,8000)}"""\n\nHER EDITED VERSION:\n"""${d.text.slice(0,8000)}"""\n\nIdentify ${auto?'1 to 3':'2 to 5'} durable, reusable style lessons revealed by her changes (word choices she swaps, things she cuts, how she opens or closes, sentence length, tone). Each is one short imperative sentence a ghostwriter could follow, with a tiny example if helpful. If a lesson only applies to one kind of writing, start it with that kind in brackets, e.g. "[Cover letters] ...". Ignore fact or content changes specific to this piece. If her edits show no clear new pattern, return an empty list. No em dashes. Return JSON: {"lessons":["..."]}`;
+    const res = await aiJSON(prompt, {modelTier:'default'});
+    const lessons = (res && Array.isArray(res.lessons) ? res.lessons : []).map(s => String(s).trim()).filter(Boolean).slice(0, auto?3:5);
+    if(auto){
+      d.lastAI = d.text; d.dismissRatio = 0; saveDraft(d);
+      if(lessons.length){ voice.lessons.push(...lessons); saveVoice(); toast(`Learned ${lessons.length} thing${lessons.length>1?'s':''} from your edits. Review them in My Voice.`); }
+      busy = false; finish(); renderLearnBanner(); maybeConsolidate(); return;
+    }
+    box.classList.remove('thinking');
+    if(!lessons.length){ box.textContent = 'No clear new pattern in these edits yet. Keep going and it will try again later.'; d.lastAI = d.text; d.dismissRatio = 0; saveDraft(d); renderLearnBanner(); }
+    else {
+      box.innerHTML = '<div style="font-family:DM Sans,sans-serif;font-size:13px;margin-bottom:6px;color:var(--muted)">Keep the ones that are right:</div>' + lessons.map((l,i)=>`<label class="lesson" style="cursor:pointer"><input type="checkbox" checked data-l="${i}"><span>${esc(l)}</span></label>`).join('');
+      $('#outacts').innerHTML = '<button class="btn primary sm" id="saveLessons">Save to my voice</button><button class="btn ghost sm" id="skipLessons">Discard</button>';
+      $('#saveLessons').onclick = () => {
+        const keep = [...box.querySelectorAll('[data-l]')].filter(c=>c.checked).map(c => lessons[+c.dataset.l]);
+        voice.lessons.push(...keep); d.lastAI = d.text; d.dismissRatio = 0; saveVoice(); saveDraft(d); renderVoice(); renderLearnBanner();
+        $('#out').classList.remove('on'); toast(`Saved ${keep.length} lesson${keep.length===1?'':'s'}. Future drafts will use them.`);
+        maybeConsolidate();
+      };
+      $('#skipLessons').onclick = () => { d.dismissRatio = editStats(d.lastAI, d.text).ratio; saveDraft(d); renderLearnBanner(); $('#out').classList.remove('on'); };
+    }
+  }catch(e){
+    if(!auto && box){ box.classList.remove('thinking'); box.textContent = aiErrorText(e); }
+  }
+  busy = false; finish();
+}
+
+/* ================= folding lessons into the profile ================= */
+const FOLD_AT = 6;
+function maybeConsolidate(){ if(voice.lessons.length >= FOLD_AT && !busy) consolidate(true); }
+async function consolidate(auto){
+  if(busy || !voice.lessons.length) return; if(!aiReady()){ if(!auto) openSettings('Add your Anthropic API key first.'); return; }
+  busy = true; renderVoice();
+  const note = $('#profileNote'); if(note) note.textContent = 'Folding lessons into your profile…';
+  if(auto) toast(`Folding ${voice.lessons.length} lessons into your voice profile…`);
+  const folding = voice.lessons.slice();
+  try{
+    const prompt = `Update this writer's voice profile so it absorbs the new lessons learned from how she edits AI drafts.\n\nHER RULES (keep them out of the profile; they're stored separately):\n${voice.rules}\n\nCURRENT PROFILE:\n${voice.profile || '(none yet: build one from the lessons)'}\n\nNEW LESSONS (newer than the profile; when they conflict with it, the lessons win):\n- ${folding.join('\n- ')}\n\nRewrite the full profile with each lesson merged into the section where it belongs (Tone & stance; Sentence rhythm & length; Word choice; How she opens; How she closes; Evidence and numbers; Signature moves; Never do; plus "By type" for lessons tagged to one kind of writing). Merge duplicates, drop anything contradicted, keep every specific detail and tiny example that still holds. Plain text with "- " bullets, no markdown header symbols, no em dashes. Under 450 words. Return only the profile.`;
+    const res = await aiText(prompt, {modelTier:'complex', cache:false});
+    const text = cleanOut(res.text);
+    if(text.length < 80) throw new Error('short');
+    voice.profileHistory = [{profile: voice.profile, lessons: folding, at: Date.now()}, ...(voice.profileHistory||[])].slice(0,3);
+    voice.profile = text;
+    voice.lessons = voice.lessons.filter(l => !folding.includes(l));
+    voice.profileUpdated = Date.now();
+    saveVoice();
+    if(note) note.textContent = '';
+    toast(`Voice profile updated with ${folding.length} lesson${folding.length>1?'s':''}. You can undo this in My Voice.`);
+  }catch(e){
+    if(note) note.textContent = e && e.code==='rate_limited' ? 'Rate limited: it will try again next time.' : 'Couldn\'t update the profile this time.';
+  }
+  busy = false; finish(); renderVoice();
+}
+function undoProfile(){
+  const h = (voice.profileHistory||[])[0]; if(!h) return;
+  voice.profile = h.profile; voice.lessons = [...h.lessons, ...voice.lessons];
+  voice.profileHistory = voice.profileHistory.slice(1);
+  voice.profileUpdated = Date.now(); saveVoice(); renderVoice(); toast('Restored the previous profile. Those lessons are back in the list.');
+}
+
+/* ================= voice page ================= */
+function renderVoice(){
+  ['rules','profile','background'].forEach(k => { const el = $('#'+k); if(document.activeElement!==el) el.value = voice[k]||''; });
+  Object.keys(MODES).forEach(k => { const el = $('#mode-'+k); if(document.activeElement!==el) el.value = voice.modes[k]||''; });
+  const sEl = $('#samples');
+  if(!sEl.contains(document.activeElement)){
+    sEl.innerHTML = voice.samples.length ? voice.samples.map((s,i)=>`<div class="sample" data-i="${i}">
+      <input data-s="title" value="${esc(s.title)}" placeholder="Title, e.g. MBJ: Y'all Street hiring">
+      <textarea data-s="text" placeholder="Paste the full piece…">${esc(s.text)}</textarea>
+      <div class="srow"><span>${wordCount(s.text)} words</span><button class="btn ghost sm" data-rm="${i}">Remove</button></div></div>`).join('')
+      : '<div class="notice" style="margin-bottom:10px">No samples yet. Your published MBJ pieces are the best place to start.</div>';
+  }
+  $('#lessons').innerHTML = voice.lessons.length ? voice.lessons.map((l,i)=>`<div class="lesson"><span>${esc(l)}</span><button class="btn ghost sm" data-rl="${i}">✕</button></div>`).join('') : '<div class="notice">Nothing yet. This fills in as you edit drafts.</div>';
+  const nS = voice.samples.filter(s=>wordCount(s.text)>40).length;
+  const steps = [['Rules set', !!voice.rules.trim()],[`Samples (${nS}/3+)`, nS>=3],['Profile built', !!voice.profile.trim()],[`Lessons learned (${voice.lessons.length})`, voice.lessons.length>0]];
+  $('#steps').innerHTML = steps.map(([l,ok],i)=>`<span class="step ${ok?'done':''}"><span class="n">${ok?'✓':i+1}</span>${l}</span>`).join('');
+  $('#autoLearn').checked = !!voice.autoLearn;
+  $('#foldNow').style.display = voice.lessons.length ? 'inline-flex' : 'none';
+  $('#foldNow').disabled = busy;
+  $('#undoProfile').style.display = (voice.profileHistory||[]).length ? 'inline-flex' : 'none';
+  $('#undoProfile').disabled = busy;
+  $('#profileStamp').textContent = voice.profileUpdated ? `Last updated ${ago(voice.profileUpdated)}` : '';
+  $('#buildProfile').disabled = busy;
+  $('#buildProfile').textContent = voice.profile.trim() ? 'Rebuild profile from samples' : 'Build profile from samples';
+}
+$('#rules').oninput = e => { voice.rules = e.target.value; saveVoice(); };
+$('#profile').oninput = e => { voice.profile = e.target.value; saveVoice(); };
+$('#background').oninput = e => { voice.background = e.target.value; saveVoice(); };
+Object.keys(MODES).forEach(k => $('#mode-'+k).oninput = e => { voice.modes[k] = e.target.value; saveVoice(); });
+$('#addSample').onclick = () => { voice.samples.push({title:'', text:''}); saveVoice(); renderVoice(); const all = document.querySelectorAll('.sample textarea'); all[all.length-1]?.focus(); };
+$('#samples').addEventListener('input', e => {
+  const el = e.target, w = el.closest('.sample'); if(!w || !el.dataset.s) return;
+  voice.samples[+w.dataset.i][el.dataset.s] = el.value; saveVoice();
+  w.querySelector('.srow span').textContent = wordCount(voice.samples[+w.dataset.i].text) + ' words';
+});
+$('#samples').addEventListener('focusout', () => setTimeout(renderVoice, 0));
+$('#samples').addEventListener('click', e => { const b = e.target.closest('[data-rm]'); if(!b) return; voice.samples.splice(+b.dataset.rm,1); saveVoice(); document.activeElement.blur(); renderVoice(); });
+$('#autoLearn').onchange = e => { voice.autoLearn = e.target.checked; saveVoice(); toast(voice.autoLearn ? 'It will now learn from your edits on its own' : 'It will ask before learning'); renderLearnBanner(); };
+$('#foldNow').onclick = () => consolidate(false);
+$('#undoProfile').onclick = undoProfile;
+$('#lessons').addEventListener('click', e => { const b = e.target.closest('[data-rl]'); if(!b) return; voice.lessons.splice(+b.dataset.rl,1); saveVoice(); renderVoice(); });
+
+$('#buildProfile').onclick = async () => {
+  const ex = voice.samples.filter(s => wordCount(s.text) > 40);
+  if(!ex.length){ toast('Add at least one sample (40+ words) first'); return; }
+  if(busy) return; if(!aiReady()){ openSettings('Add your Anthropic API key to build your profile.'); return; }
+  busy = true; $('#buildProfile').disabled = true; $('#profileNote').textContent = 'Reading your samples…';
+  const prompt = `Analyze this writer's real samples and build a voice profile a ghostwriter can follow to write exactly like her.\n\nHER STATED RULES:\n${voice.rules}\n\nSAMPLES:\n${ex.map(s=>`--- ${s.title||'Sample'} ---\n${s.text.slice(0,6000)}`).join('\n\n')}\n\nWrite the profile as short labeled sections, each with 2–4 concrete bullet points drawn from the samples (quote tiny phrases as evidence): Tone & stance; Sentence rhythm & length; Word choice (words she uses, words she avoids); How she opens; How she closes; How she uses evidence and numbers; Signature moves; Never do. Be specific to HER, not generic writing advice. Plain text with "- " bullets, no markdown headers symbols, no em dashes. Under 350 words.`;
+  let text = '';
+  try{
+    const res = await aiText(prompt, {modelTier:'complex', cache:false, onText: ({text:t}) => { text = t; $('#profile').value = t; $('#profileNote').textContent = 'Writing your profile…'; }});
+    text = cleanOut(res.text);
+    if(voice.profile.trim()) voice.profileHistory = [{profile: voice.profile, lessons: [], at: Date.now()}, ...(voice.profileHistory||[])].slice(0,3);
+    voice.profile = text; voice.profileUpdated = Date.now(); $('#profile').value = text; saveVoice();
+    $('#profileNote').textContent = 'Done. Read it over and edit anything that feels off.';
+  }catch(e){
+    $('#profileNote').textContent = aiErrorText(e);
+    if(e && e.text){ voice.profile = cleanOut(e.text); saveVoice(); }
+  }
+  busy = false; renderVoice();
+};
+
+/* ================= shell ================= */
+function showView(v){
+  document.querySelectorAll('.tabs button').forEach(b => b.classList.toggle('on', b.dataset.v===v));
+  document.querySelectorAll('.view').forEach(s => s.classList.toggle('on', s.id==='v-'+v));
+  if(v==='voice') renderVoice(); else renderAll();
+}
+document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => showView(b.dataset.v));
+document.querySelectorAll('[data-new]').forEach(b => b.onclick = () => {
+  const mode = b.dataset.new;
+  const d = {id:newId(), title:'', mode, brief:{}, text:'', lastAI:'', updated:Date.now()};
+  drafts.push(d); currentId = d.id; saveDraft(d); renderAll();
+  setTimeout(() => { const f = $('#aiPanel [data-b]'); f && f.focus(); }, 50);
+});
+$('#search').oninput = renderList;
+$('#dlist').onclick = e => { const it = e.target.closest('.ditem'); if(!it) return; currentId = it.dataset.id; lastOut = null; renderAll(); };
+async function copy(t){ try{ await navigator.clipboard.writeText(t); toast('Copied'); }catch(e){ toast('Copy blocked: select the text and press Ctrl/⌘+C'); } }
+function renderAll(){ renderList(); renderEditor(); renderAI(); }
+
+renderAll();
+setStatus();
+$('#status').innerHTML = '<span class="d"></span>Connecting…';
+initBackend();
+})();
+</script>
+</body>
+</html>
