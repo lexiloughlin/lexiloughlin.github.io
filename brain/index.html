@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="An AI knowledge graph that links Lexi Loughlin's notes, documents, GitHub repos, goals and ideas.">
+<title>Lexi's Second Brain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Layout: full-height graph canvas on the left, a working panel (Ask / Inspect / Add) on the right */
+  --bg:#eef1f7; --surface:#ffffff; --ink:#18203a; --muted:#5d6782; --line:#d7dce8; --accent:#2f5bea;
+  --c-project:#2f5bea; --c-repo:#11937a; --c-goal:#d99400; --c-idea:#e2553a; --c-note:#8650d6; --c-doc:#5f6f86; --c-course:#c23d8a;
+  --warn:#c77700; --good:#11937a;
+  --display:"Sora", system-ui, sans-serif; --body:"IBM Plex Sans", system-ui, sans-serif; --mono:"IBM Plex Mono", ui-monospace, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1322; --surface:#181d30; --ink:#e7eaf5; --muted:#98a1bd; --line:#2a3150; --accent:#7d9bff;
+    --c-project:#6f91ff; --c-repo:#31c3a2; --c-goal:#f2b632; --c-idea:#ff7a5c; --c-note:#ad84f2; --c-doc:#91a0b8; --c-course:#ec6fb4;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1322; --surface:#181d30; --ink:#e7eaf5; --muted:#98a1bd; --line:#2a3150; --accent:#7d9bff;
+  --c-project:#6f91ff; --c-repo:#31c3a2; --c-goal:#f2b632; --c-idea:#ff7a5c; --c-note:#ad84f2; --c-doc:#91a0b8; --c-course:#ec6fb4;
+  color-scheme: dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--body);display:flex;flex-direction:column}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+header{display:flex;align-items:center;gap:16px;padding:12px 18px;border-bottom:1px solid var(--line);background:var(--surface);flex-wrap:wrap}
+h1{font:600 19px/1.2 var(--display);margin:0;letter-spacing:-.01em}
+.stats{display:flex;gap:8px;flex-wrap:wrap}
+.stat{font:500 12px var(--mono);padding:4px 9px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-variant-numeric:tabular-nums}
+.stat b{color:var(--ink);font-weight:600}
+.stat.fade b{color:var(--warn)}
+.spacer{flex:1}
+.btn{border:1px solid var(--line);background:var(--surface);padding:7px 13px;border-radius:8px;cursor:pointer;font-weight:500}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn:disabled{opacity:.55;cursor:progress}
+main{flex:1;display:grid;grid-template-columns:1fr 400px;min-height:0}
+#graphWrap{position:relative;min-height:0;overflow:hidden}
+#graph{width:100%;height:100%;display:block;cursor:grab}
+#graph:active{cursor:grabbing}
+.legend{position:absolute;left:14px;top:14px;display:flex;flex-direction:column;gap:4px;background:color-mix(in srgb,var(--surface) 88%,transparent);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13px}
+.legend .lg-title{font:500 11px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+.legend button{display:flex;align-items:center;gap:8px;background:none;border:0;padding:2px 0;cursor:pointer;text-align:left}
+.legend button.off{opacity:.35}
+.dot{width:11px;height:11px;border-radius:50%;flex:none}
+.legend .key{margin-top:6px;padding-top:6px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;display:flex;flex-direction:column;gap:3px}
+.legend .key span{display:flex;align-items:center;gap:7px}
+.ring{width:11px;height:11px;border-radius:50%;border:1.5px dashed var(--muted)}
+.faded{width:11px;height:11px;border-radius:50%;background:var(--muted);opacity:.3}
+#status{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:7px 14px;border-radius:999px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90%}
+#status.on{opacity:.92}
+aside{border-left:1px solid var(--line);background:var(--surface);display:flex;flex-direction:column;min-height:0}
+.tabs{display:flex;border-bottom:1px solid var(--line)}
+.tabs button{flex:1;background:none;border:0;padding:11px 0;cursor:pointer;font-weight:500;color:var(--muted);border-bottom:2px solid transparent}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.pane{flex:1;overflow:auto;padding:16px 18px;display:none}
+.pane.on{display:block}
+h2{font:600 15px/1.3 var(--display);margin:0 0 8px}
+h3{font:500 11px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:18px 0 8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{text-align:left;border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:5px 11px;font-size:13px;cursor:pointer}
+.chip:hover{border-color:var(--accent)}
+textarea,input[type=text],input[type=url],select{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:8px 10px}
+textarea{resize:vertical;min-height:70px}
+.row{display:flex;gap:8px;align-items:center}
+.row > *{flex:1}
+label{font-size:12px;color:var(--muted);display:block;margin:10px 0 4px}
+.answer{margin-top:14px;font-size:14.5px;line-height:1.55}
+.answer p{margin:0 0 8px}
+.answer ul{margin:0 0 8px;padding-left:18px}
+.answer li{margin-bottom:4px}
+.ref{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:6px;padding:0 6px;font-size:13px;cursor:pointer;background:var(--bg);white-space:nowrap}
+.ref:hover{border-color:var(--accent)}
+.ref .dot{width:8px;height:8px}
+.fade-list{display:flex;flex-direction:column;gap:6px}
+.fade-item{display:flex;align-items:center;gap:8px;padding:7px 9px;border:1px solid var(--line);border-radius:8px;cursor:pointer;background:var(--bg)}
+.fade-item:hover{border-color:var(--accent)}
+.fade-item .t{flex:1;font-size:13.5px}
+.fade-item .d{font:500 12px var(--mono);color:var(--warn);font-variant-numeric:tabular-nums}
+.bar{height:4px;border-radius:2px;background:var(--line);overflow:hidden;width:54px;flex:none}
+.bar i{display:block;height:100%;background:var(--warn)}
+.pill{display:inline-block;font:500 11.5px var(--mono);padding:2px 8px;border-radius:999px;border:1px solid var(--line);margin-right:4px}
+.meta{color:var(--muted);font-size:13px;margin:6px 0 10px}
+.body-text{white-space:pre-wrap;font-size:14px}
+.conn{display:flex;gap:8px;padding:8px 0;border-top:1px solid var(--line);cursor:pointer}
+.conn:hover .ct{color:var(--accent)}
+.conn .ct{font-weight:500;font-size:14px}
+.conn .cr{font-size:13px;color:var(--muted)}
+.conn .rel{font:500 11px var(--mono);color:var(--muted)}
+.empty{color:var(--muted);font-size:14px}
+.drop{border:1.5px dashed var(--line);border-radius:10px;padding:14px;text-align:center;color:var(--muted);font-size:13px;margin-top:8px}
+.drop.over{border-color:var(--accent);color:var(--accent)}
+.thinking{color:var(--muted);font-style:italic}
+a{color:var(--accent)}
+.node-label{font:500 11px var(--body);fill:var(--ink);paint-order:stroke;stroke:var(--bg);stroke-width:3px;pointer-events:none}
+.modal{position:fixed;inset:0;background:color-mix(in srgb,var(--ink) 40%,transparent);display:flex;align-items:center;justify-content:center;padding:16px;z-index:10}
+.modal[hidden]{display:none}
+.modal-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 22px;width:min(520px,100%);max-height:90vh;overflow:auto}
+@media (max-width:860px){
+  main{grid-template-columns:1fr;grid-template-rows:55vh auto}
+  aside{border-left:0;border-top:1px solid var(--line)}
+  .legend{font-size:12px}
+}
+@media (prefers-reduced-motion: reduce){ *{transition:none!important} }
+</style>
+</head>
+<body>
+<header>
+  <h1><a href="/" style="color:inherit;text-decoration:none" title="Back to lexiloughlin.github.io">Lexi</a> · Second Brain</h1>
+  <div class="stats" id="stats"></div>
+  <div class="spacer"></div>
+  <button class="btn" id="btnSync" title="Pull in new and updated public repos from github.com/lexiloughlin">Sync GitHub</button>
+  <button class="btn" id="btnDiscover" title="Have AI re-read everything and redraw the connections">Rediscover connections</button>
+  <button class="btn" id="btnSettings" title="AI key and backup">Settings</button>
+  <button class="btn primary" id="btnAdd">Add to brain</button>
+</header>
+<div id="settings" class="modal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="setTitle">
+    <h2 id="setTitle">Settings</h2>
+    <p class="empty" id="setMsg" style="margin:0 0 6px"></p>
+    <h3>AI · Anthropic API key</h3>
+    <p class="empty" style="margin:0">Same key as your Writing Studio: if you saved it there, it's already here. It stays in this browser only and is never uploaded. Get one at <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com</a>.</p>
+    <label for="keyIn">API key</label>
+    <input type="password" id="keyIn" autocomplete="off" spellcheck="false" placeholder="sk-ant-…">
+    <label for="modelIn">Model</label>
+    <select id="modelIn"><option value="claude-sonnet-5-5">Sonnet 5.5 (fast, recommended)</option><option value="claude-opus-5-5">Opus 5.5 (smartest, costs more)</option><option value="claude-haiku-5-5">Haiku 5.5 (cheapest)</option></select>
+    <h3>Backup and move</h3>
+    <p class="empty" style="margin:0 0 6px">Your brain is saved in this browser. Copy it out to back it up, or paste a backup (including one copied from your claude.ai Second Brain) to bring everything in. Pasting merges; nothing gets deleted.</p>
+    <textarea id="ioBox" rows="4" placeholder="Paste a backup here to import"></textarea>
+    <div class="row" style="margin-top:8px;flex-wrap:wrap">
+      <button class="btn" id="btnExport" style="flex:none">Copy backup</button>
+      <button class="btn" id="btnImport" style="flex:none">Import pasted backup</button>
+      <span class="empty" id="ioNote" style="font-size:12px"></span>
+    </div>
+    <div class="row" style="margin-top:18px;justify-content:flex-end"><button class="btn primary" id="btnSetDone" style="flex:none">Save and close</button></div>
+  </div>
+</div>
+<main>
+  <div id="graphWrap">
+    <svg id="graph" aria-label="Knowledge graph of notes, projects, repos, goals and ideas"></svg>
+    <div class="legend" id="legend"></div>
+    <div id="status" role="status"></div>
+  </div>
+  <aside>
+    <div class="tabs" role="tablist">
+      <button role="tab" aria-selected="true" data-tab="ask" id="tab-ask">Ask</button>
+      <button role="tab" aria-selected="false" data-tab="inspect" id="tab-inspect">Inspect</button>
+      <button role="tab" aria-selected="false" data-tab="add" id="tab-add">Add</button>
+    </div>
+    <section class="pane on" id="pane-ask">
+      <h2>Ask your brain</h2>
+      <div class="chips" id="presets"></div>
+      <label for="q">Or ask anything</label>
+      <textarea id="q" rows="2" placeholder="e.g. Which of my projects could become a writing piece for MBJ?"></textarea>
+      <div class="row" style="margin-top:8px"><button class="btn primary" id="btnAsk" style="flex:none">Ask</button><span class="empty" id="askNote" style="font-size:12px"></span></div>
+      <div class="answer" id="answer"></div>
+      <h3>Fading from memory</h3>
+      <div class="fade-list" id="fadeList"></div>
+    </section>
+    <section class="pane" id="pane-inspect">
+      <div id="inspect"><p class="empty">Click any dot in the graph to see what it is and why it's connected.</p></div>
+    </section>
+    <section class="pane" id="pane-add">
+      <h2>Add one thing</h2>
+      <label for="fTitle">Title</label>
+      <input type="text" id="fTitle" placeholder="e.g. Energy trading dashboard idea">
+      <div class="row">
+        <div><label for="fType">Type</label>
+          <select id="fType"><option value="idea">Idea</option><option value="note">Note</option><option value="project">Project</option><option value="repo">GitHub repo</option><option value="goal">Goal</option><option value="doc">Document / writing</option><option value="course">Class</option></select></div>
+        <div><label for="fStatus">Status</label>
+          <select id="fStatus"><option value="active">Active</option><option value="unfinished">Unfinished</option><option value="someday">Someday</option><option value="paused">Paused</option><option value="done">Done</option></select></div>
+      </div>
+      <label for="fBody">What is it? (the more detail, the better the links)</label>
+      <textarea id="fBody" rows="4"></textarea>
+      <label for="fTags">Tags (comma separated)</label>
+      <input type="text" id="fTags" placeholder="energy, python, dallas">
+      <label for="fUrl">Link (optional)</label>
+      <input type="url" id="fUrl" placeholder="https://github.com/lexiloughlin/...">
+      <div class="row" style="margin-top:12px"><button class="btn primary" id="btnSave" style="flex:none">Add and find links</button><span class="empty" id="saveNote" style="font-size:12px"></span></div>
+
+      <h3>Bulk import</h3>
+      <p class="empty" style="margin:0 0 6px">Paste notes, a doc, a README or a brain dump. AI splits it into separate items and links them.</p>
+      <textarea id="bulk" rows="5" placeholder="Paste anything here…"></textarea>
+      <div class="drop" id="drop">Or drop .md, .txt, .csv or .json files here
+        <input type="file" id="fileIn" multiple accept=".md,.txt,.csv,.json,.markdown" style="display:block;margin:8px auto 0;font-size:12px"></div>
+      <div class="row" style="margin-top:10px"><button class="btn" id="btnBulk" style="flex:none">Extract items with AI</button><span class="empty" id="bulkNote" style="font-size:12px"></span></div>
+    </section>
+  </aside>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script>
+(() => {
+const TYPES = {
+  project:{label:"Project"}, repo:{label:"GitHub repo"}, goal:{label:"Goal"},
+  idea:{label:"Idea"}, note:{label:"Note"}, doc:{label:"Writing / doc"}, course:{label:"Class"}
+};
+const RELATIONS = ["builds-on","overlaps","could-merge","supports-goal","shares-skill","same-data","same-audience","feeds-into","tension"];
+const PRESETS = [
+  "What have I forgotten?",
+  "Which projects overlap?",
+  "Which unfinished ideas are worth revisiting?",
+  "What should I build next to get hired in energy or consulting?",
+  "Which of my projects would make a good MBJ article?"
+];
+const DAY = 864e5;
+const state = { items:new Map(), edges:new Map(), hidden:new Set(), selected:null, highlight:null };
+let db = null, sample = null;
+
+const $ = s => document.querySelector(s);
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const colorOf = t => css("--c-" + (TYPES[t] ? t : "doc"));
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const daysSince = iso => iso ? Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / DAY)) : 999;
+const today = () => new Date().toISOString().slice(0,10);
+const newId = p => (p||"i") + "-" + Math.random().toString(36).slice(2,9);
+const edgeId = (a,b) => [a,b].sort().join("__");
+
+let statusTimer;
+function toast(msg, ms=3200){ const el=$("#status"); el.textContent=msg; el.classList.add("on"); clearTimeout(statusTimer); if(ms) statusTimer=setTimeout(()=>el.classList.remove("on"), ms); }
+
+/* ---------- storage: this browser ---------- */
+const STORE = "lexi-brain.v1", KEY_STORE = "lexi-studio.apikey", MODEL_STORE = "lexi-studio.model";
+const ls = {
+  get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } },
+  set(k,v){ try{ localStorage.setItem(k,v); return true; }catch(e){ return false; } }
+};
+let saveTimer;
+function save(){ clearTimeout(saveTimer); saveTimer = setTimeout(() => {
+  if (!ls.set(STORE, JSON.stringify({items:[...state.items.values()], edges:[...state.edges.values()], synced: state.synced||null})))
+    toast("This browser won't save. Copy a backup from Settings.");
+}, 250); }
+function load(){
+  try{ const d = JSON.parse(ls.get(STORE) || "null"); if (!d) return false;
+    state.items = new Map((d.items||[]).map(i=>[i.id,i])); state.edges = new Map((d.edges||[]).map(e=>[e.id,e])); state.synced = d.synced; return true;
+  }catch(e){ return false; }
+}
+async function putItem(it){ state.items.set(it.id, it); save(); render(); }
+async function putEdge(e){ state.edges.set(e.id, e); save(); }
+async function delEdge(id){ state.edges.delete(id); save(); }
+async function delItem(id){
+  for (const e of [...state.edges.values()]) if (e.source===id || e.target===id) state.edges.delete(e.id);
+  state.items.delete(id); save();
+  state.selected=null; render(); showInspect(null);
+}
+
+/* ---------- graph ---------- */
+const svg = d3.select("#graph");
+const root = svg.append("g");
+const linkG = root.append("g"), nodeG = root.append("g"), labelG = root.append("g");
+const zoom = d3.zoom().scaleExtent([0.3, 4]).on("zoom", ev => root.attr("transform", ev.transform));
+svg.call(zoom).on("dblclick.zoom", null);
+svg.on("click", ev => { if (ev.target === svg.node()) { state.selected=null; state.highlight=null; paint(); } });
+
+const sim = d3.forceSimulation()
+  .force("link", d3.forceLink().id(d=>d.id).distance(l => 120 - l.strength*18).strength(l => 0.15 + l.strength*0.12))
+  .force("charge", d3.forceManyBody().strength(-260))
+  .force("collide", d3.forceCollide().radius(d => d.r + 10))
+  .force("x", d3.forceX().strength(0.04)).force("y", d3.forceY().strength(0.05))
+  .on("tick", tick);
+let nodes = [], links = [];
+
+function degree(id){ let n=0; for (const e of state.edges.values()) if (e.source===id||e.target===id) n++; return n; }
+
+function render(){
+  const old = new Map(nodes.map(n => [n.id, n]));
+  const visible = [...state.items.values()].filter(it => !state.hidden.has(it.type));
+  const vis = new Set(visible.map(v=>v.id));
+  nodes = visible.map(it => {
+    const o = old.get(it.id) || {};
+    const deg = degree(it.id);
+    return Object.assign(o, { id:it.id, item:it, r: Math.min(22, 7 + deg*1.6) });
+  });
+  links = [...state.edges.values()].filter(e => vis.has(e.source) && vis.has(e.target)).map(e => ({...e}));
+  const { width, height } = svg.node().getBoundingClientRect();
+  sim.force("x").x(0); sim.force("y").y(0);
+  if (!svg.attr("data-centered") && width) { svg.call(zoom.transform, d3.zoomIdentity.translate(width/2 + 30, height/2)); svg.attr("data-centered","1"); }
+
+  linkG.selectAll("line").data(links, d=>d.id).join("line")
+    .attr("stroke", "var(--muted)").attr("stroke-linecap","round")
+    .attr("stroke-width", d => 0.8 + d.strength*0.9)
+    .attr("stroke-dasharray", d => d.relation==="could-merge" ? "5 4" : d.relation==="tension" ? "2 4" : null);
+
+  nodeG.selectAll("g.n").data(nodes, d=>d.id).join(enter => {
+      const g = enter.append("g").attr("class","n").style("cursor","pointer");
+      g.append("circle").attr("class","halo");
+      g.append("circle").attr("class","core");
+      g.on("click", (ev,d) => { ev.stopPropagation(); select(d.id); })
+       .call(d3.drag().on("start",(ev,d)=>{ if(!ev.active) sim.alphaTarget(.25).restart(); d.fx=d.x; d.fy=d.y; })
+         .on("drag",(ev,d)=>{ d.fx=ev.x; d.fy=ev.y; })
+         .on("end",(ev,d)=>{ if(!ev.active) sim.alphaTarget(0); d.fx=null; d.fy=null; }));
+      g.append("title");
+      return g;
+    })
+    .each(function(d){
+      const g = d3.select(this), it = d.item, age = daysSince(it.touched);
+      const fade = it.status==="done" ? 0.55 : Math.max(0.3, 1 - age/150);
+      g.select(".core").attr("r", d.r).attr("fill", colorOf(it.type)).attr("fill-opacity", fade)
+        .attr("stroke", "var(--surface)").attr("stroke-width", 1.5);
+      g.select(".halo").attr("r", d.r + 4).attr("fill","none")
+        .attr("stroke", (it.status==="unfinished"||it.status==="someday"||it.status==="paused") ? "var(--muted)" : "none")
+        .attr("stroke-width", 1.4).attr("stroke-dasharray","3 3");
+      g.select("title").text(`${it.title} · ${TYPES[it.type]?.label||it.type} · ${it.status}`);
+    });
+
+  labelG.selectAll("text").data(nodes, d=>d.id).join("text").attr("class","node-label")
+    .attr("text-anchor","middle").text(d => d.item.title.length > 28 ? d.item.title.slice(0,26)+"…" : d.item.title);
+
+  sim.nodes(nodes); sim.force("link").links(links); sim.alpha(0.6).restart();
+  paint(); renderStats(); renderFading(); renderLegend();
+  if (state.selected) showInspect(state.selected);
+}
+function tick(){
+  linkG.selectAll("line").attr("x1",d=>d.source.x).attr("y1",d=>d.source.y).attr("x2",d=>d.target.x).attr("y2",d=>d.target.y);
+  nodeG.selectAll("g.n").attr("transform", d=>`translate(${d.x},${d.y})`);
+  labelG.selectAll("text").attr("x", d=>d.x).attr("y", d=>d.y + d.r + 13);
+}
+function neighborsOf(id){ const s=new Set([id]); for (const e of state.edges.values()){ if(e.source===id) s.add(e.target); if(e.target===id) s.add(e.source);} return s; }
+function paint(){
+  const focus = state.highlight || (state.selected ? neighborsOf(state.selected) : null);
+  nodeG.selectAll("g.n").attr("opacity", d => !focus || focus.has(d.id) ? 1 : 0.12)
+    .select(".core").attr("stroke", d => d.id===state.selected ? "var(--ink)" : "var(--surface)").attr("stroke-width", d => d.id===state.selected ? 3 : 1.5);
+  labelG.selectAll("text").attr("opacity", d => !focus || focus.has(d.id) ? 1 : 0.1);
+  linkG.selectAll("line").attr("stroke-opacity", d => {
+    const s = d.source.id||d.source, t = d.target.id||d.target;
+    if (!focus) return 0.35;
+    return focus.has(s) && focus.has(t) ? 0.85 : 0.04;
+  }).attr("stroke", d => {
+    const s = d.source.id||d.source, t = d.target.id||d.target;
+    return state.selected && (s===state.selected||t===state.selected) ? "var(--accent)" : "var(--muted)";
+  });
+}
+function select(id){ state.selected=id; state.highlight=null; paint(); showInspect(id); setTab("inspect"); }
+function highlightIds(ids){
+  state.selected=null; state.highlight = new Set(ids.filter(i=>state.items.has(i))); paint();
+  const ns = nodes.filter(n => state.highlight.has(n.id));
+  if (ns.length){
+    const { width, height } = svg.node().getBoundingClientRect();
+    const cx = d3.mean(ns, n=>n.x), cy = d3.mean(ns, n=>n.y);
+    svg.transition().duration(500).call(zoom.translateTo, cx, cy, [width/2, height/2]);
+  }
+}
+
+/* ---------- side panels ---------- */
+function setTab(t){
+  document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.tab===t));
+  document.querySelectorAll(".pane").forEach(p => p.classList.toggle("on", p.id==="pane-"+t));
+}
+document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => setTab(b.dataset.tab));
+$("#btnAdd").onclick = () => { setTab("add"); $("#fTitle").focus(); };
+
+function renderStats(){
+  const items=[...state.items.values()];
+  const open = items.filter(i => i.status!=="done");
+  const fading = open.filter(i => daysSince(i.touched) >= 30).length;
+  $("#stats").innerHTML = `<span class="stat"><b>${items.length}</b> items</span><span class="stat"><b>${state.edges.size}</b> connections</span><span class="stat fade"><b>${fading}</b> fading</span>`;
+}
+function renderLegend(){
+  const counts = {}; for (const it of state.items.values()) counts[it.type]=(counts[it.type]||0)+1;
+  $("#legend").innerHTML = `<div class="lg-title">Show</div>` + Object.entries(TYPES).filter(([k])=>counts[k]).map(([k,v]) =>
+    `<button data-type="${k}" class="${state.hidden.has(k)?'off':''}" aria-pressed="${!state.hidden.has(k)}"><span class="dot" style="background:${colorOf(k)}"></span>${v.label} <span style="color:var(--muted);font-family:var(--mono);font-size:11px">${counts[k]}</span></button>`).join("")
+    + `<div class="key"><span><span class="ring"></span>unfinished / someday</span><span><span class="faded"></span>faded = not touched lately</span><span>bigger = more connected</span></div>`;
+  $("#legend").querySelectorAll("button").forEach(b => b.onclick = () => { const t=b.dataset.type; state.hidden.has(t)?state.hidden.delete(t):state.hidden.add(t); render(); });
+}
+function renderFading(){
+  const list = [...state.items.values()].filter(i => i.status!=="done" && daysSince(i.touched) >= 21)
+    .sort((a,b)=>daysSince(b.touched)-daysSince(a.touched)).slice(0,6);
+  $("#fadeList").innerHTML = list.length ? list.map(i => {
+    const d = daysSince(i.touched);
+    return `<div class="fade-item" data-id="${esc(i.id)}" tabindex="0"><span class="dot" style="background:${colorOf(i.type)}"></span><span class="t">${esc(i.title)}</span><span class="bar"><i style="width:${Math.min(100,d/150*100)}%"></i></span><span class="d">${d}d</span></div>`;
+  }).join("") : `<p class="empty">Nothing open has gone untouched for three weeks.</p>`;
+  $("#fadeList").querySelectorAll(".fade-item").forEach(el => { el.onclick = () => select(el.dataset.id); el.onkeydown = e => { if(e.key==="Enter") select(el.dataset.id); }; });
+}
+function refHtml(id){
+  const it = state.items.get(id); if (!it) return esc(id);
+  return `<span class="ref" data-id="${esc(id)}" tabindex="0"><span class="dot" style="background:${colorOf(it.type)}"></span>${esc(it.title)}</span>`;
+}
+function bindRefs(scope){ scope.querySelectorAll(".ref").forEach(el => { el.onclick = () => select(el.dataset.id); el.onkeydown = e => { if(e.key==="Enter") select(el.dataset.id); }; }); }
+
+function showInspect(id){
+  const box = $("#inspect");
+  const it = id && state.items.get(id);
+  if (!it){ box.innerHTML = `<p class="empty">Click any dot in the graph to see what it is and why it's connected.</p>`; return; }
+  const conns = [...state.edges.values()].filter(e => e.source===id||e.target===id)
+    .map(e => ({e, other: e.source===id ? e.target : e.source})).filter(c => state.items.has(c.other))
+    .sort((a,b)=>b.e.strength-a.e.strength);
+  const d = daysSince(it.touched);
+  box.innerHTML = `
+    <span class="pill" style="color:${colorOf(it.type)};border-color:${colorOf(it.type)}">${esc(TYPES[it.type]?.label||it.type)}</span>
+    <h2 style="margin-top:8px;font-size:18px;text-wrap:balance">${esc(it.title)}</h2>
+    <div class="meta">Last touched ${d===0?"today":d+" days ago"}${it.url ? ` · <a href="${esc(it.url)}" target="_blank" rel="noopener">open link</a>` : ""}</div>
+    <div class="row" style="margin-bottom:10px">
+      <select id="iStatus" aria-label="Status">${["active","unfinished","someday","paused","done"].map(s=>`<option ${s===it.status?"selected":""}>${s}</option>`).join("")}</select>
+      <button class="btn" id="iTouch" style="flex:none">Touched today</button>
+    </div>
+    <div class="body-text" id="iBody">${esc(it.body||"")}</div>
+    ${it.tags?.length ? `<div style="margin-top:10px">${it.tags.map(t=>`<span class="pill">${esc(t)}</span>`).join("")}</div>` : ""}
+    <h3>Connections (${conns.length})</h3>
+    ${conns.length ? conns.map(c => { const o=state.items.get(c.other); return `<div class="conn" data-id="${esc(c.other)}" tabindex="0"><span class="dot" style="background:${colorOf(o.type)};margin-top:6px"></span><div><div class="ct">${esc(o.title)}</div><div class="rel">${esc(c.e.relation)} · ${"●".repeat(c.e.strength)}</div><div class="cr">${esc(c.e.reason)}</div></div></div>`; }).join("") : `<p class="empty">No links yet. Try “Find links for this”.</p>`}
+    <div class="row" style="margin-top:14px;flex-wrap:wrap">
+      <button class="btn" id="iLink" style="flex:none">Find links for this</button>
+      <button class="btn" id="iEdit" style="flex:none">Edit text</button>
+      <button class="btn" id="iDel" style="flex:none">Delete</button>
+    </div>
+    <p class="empty" id="iNote" style="font-size:12px"></p>`;
+  box.querySelectorAll(".conn").forEach(el => { el.onclick = () => select(el.dataset.id); el.onkeydown = e => { if(e.key==="Enter") select(el.dataset.id); }; });
+  $("#iStatus").onchange = e => putItem({...it, status:e.target.value, touched: today()});
+  $("#iTouch").onclick = () => putItem({...it, touched: today()});
+  $("#iLink").onclick = () => linkItem(it.id, $("#iLink"));
+  let armed=false;
+  $("#iDel").onclick = e => { if(!armed){ armed=true; e.target.textContent="Click again to delete"; return; } delItem(it.id); };
+  $("#iEdit").onclick = () => {
+    const b = $("#iBody");
+    b.outerHTML = `<textarea id="iBodyEdit" rows="7">${esc(it.body||"")}</textarea><button class="btn primary" id="iSaveBody" style="margin-top:6px">Save</button>`;
+    $("#iSaveBody").onclick = () => putItem({...it, body: $("#iBodyEdit").value, touched: today()});
+  };
+}
+
+/* ---------- AI ---------- */
+function compactItems(){
+  return [...state.items.values()].map(i => ({
+    id:i.id, type:i.type, title:i.title, status:i.status, tags:i.tags||[],
+    days_since_touched: daysSince(i.touched), about: (i.body||"").slice(0, 420)
+  }));
+}
+const aiReady = () => !!sample || !!ls.get(KEY_STORE);
+async function apiText(prompt, opts={}){
+  const key = ls.get(KEY_STORE);
+  if (!key) throw {code:"no_key"};
+  let res;
+  try{
+    res = await fetch("https://api.anthropic.com/v1/messages", { method:"POST", signal: opts.signal,
+      headers:{"content-type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+      body: JSON.stringify({ model: ls.get(MODEL_STORE) || "claude-sonnet-5-5", max_tokens: opts.modelTier==="complex" ? 8000 : 4000, stream:true, messages:[{role:"user", content:prompt}] }) });
+  }catch(e){ if (e?.name==="AbortError") throw e; throw {code:"network"}; }
+  if (!res.ok){
+    let msg=""; try{ msg = (await res.json()).error?.message || ""; }catch(e){}
+    if (res.status===401) throw {code:"bad_key"};
+    if (res.status===429) throw {code:"rate_limited"};
+    if (/credit/i.test(msg)) throw {code:"no_credit"};
+    throw {code:"api_error", message:msg};
+  }
+  const reader = res.body.getReader(), dec = new TextDecoder(); let buf="", text="";
+  while (true){
+    const {value, done} = await reader.read(); if (done) break;
+    buf += dec.decode(value, {stream:true}); let i;
+    while ((i = buf.indexOf("\n")) >= 0){
+      const line = buf.slice(0,i).trim(); buf = buf.slice(i+1);
+      if (!line.startsWith("data:")) continue;
+      let ev; try{ ev = JSON.parse(line.slice(5)); }catch(e){ continue; }
+      if (ev.type==="content_block_delta" && ev.delta?.type==="text_delta"){ text += ev.delta.text; opts.onText?.({text, delta:ev.delta.text}); }
+      if (ev.type==="error") throw {code:"api_error", message: ev.error?.message};
+    }
+  }
+  return {text, truncated:false};
+}
+async function aiText(prompt, opts={}){ return sample ? sample(prompt, opts) : apiText(prompt, opts); }
+async function askJSON(prompt, tier="default"){
+  if (!aiReady()){ openSettings("Add your Anthropic API key to turn on AI."); throw {code:"no_key"}; }
+  if (sample && typeof sample.json === "function") return await sample.json(prompt, {modelTier: tier, cache:false});
+  const r = await aiText(prompt + "\n\nReturn only the JSON object, nothing else.", {modelTier: tier, cache:false});
+  const m = r.text.match(/\{[\s\S]*\}/); return JSON.parse(m ? m[0] : r.text);
+}
+function aiError(e){
+  return ({rate_limited:"AI is busy. Try again in a minute.", not_granted:"AI access wasn't granted for this page.",
+    no_key:"Add your Anthropic API key in Settings to turn on AI.", bad_key:"That API key was rejected. Check it in Settings.",
+    no_credit:"Your Anthropic account is out of credit. Add some at console.anthropic.com.", network:"Couldn't reach Anthropic. Check your internet."})[e?.code]
+    || "AI couldn't finish that. Try again.";
+}
+function cleanEdges(raw, mustTouch){
+  const out = [];
+  for (const e of (raw||[])){
+    if (!e || !state.items.has(e.source) || !state.items.has(e.target) || e.source===e.target) continue;
+    if (mustTouch && e.source!==mustTouch && e.target!==mustTouch) continue;
+    out.push({ id: edgeId(e.source,e.target), source:e.source, target:e.target,
+      relation: RELATIONS.includes(e.relation) ? e.relation : "overlaps",
+      reason: String(e.reason||"").slice(0,180), strength: Math.max(1, Math.min(3, Math.round(e.strength||1))), by:"ai" });
+  }
+  return out;
+}
+const LINK_RULES = `Relation must be one of: ${RELATIONS.join(", ")}. strength: 3 = strong and specific, 2 = clear, 1 = loose. reason: one specific sentence under 20 words naming the shared thing (dataset, skill, audience, person, goal). Skip vague links like "both are data projects".`;
+
+async function discover(){
+  const btn = $("#btnDiscover"); btn.disabled = true; toast("Reading everything and finding connections…", 0);
+  try{
+    const res = await askJSON(`You are the linking engine of a personal knowledge graph for Lexi Loughlin, an M.S. Business Analytics student at SMU Cox in Dallas who wants a career in energy/climate strategy, consulting and building new systems.
+Here are all her items as JSON:
+${JSON.stringify(compactItems())}
+
+Find the meaningful relationships between items: projects that overlap or duplicate each other, work that feeds a goal, shared datasets or skills, writing that could draw on a project, ideas that would extend existing work. Aim for 30 to 60 edges. Every item should have at least one edge if any real link exists.
+${LINK_RULES}
+Return only JSON: {"edges":[{"source":"id","target":"id","relation":"...","reason":"...","strength":1}]}`, "complex");
+    const fresh = cleanEdges(res.edges);
+    if (!fresh.length) throw new Error("no edges");
+    const keep = new Set(fresh.map(e=>e.id));
+    for (const e of [...state.edges.values()]) if (e.by!=="manual" && !keep.has(e.id)) await delEdge(e.id);
+    for (const e of fresh) await putEdge(e);
+    render(); toast(`Found ${fresh.length} connections.`);
+  } catch(e){ toast(aiError(e)); }
+  btn.disabled = false;
+}
+$("#btnDiscover").onclick = discover;
+
+async function linkItem(id, btn){
+  const it = state.items.get(id); if (!it) return;
+  if (btn) btn.disabled = true; toast(`Finding links for “${it.title}”…`, 0);
+  try{
+    const others = compactItems().filter(i => i.id!==id);
+    const res = await askJSON(`You link one new item into Lexi Loughlin's personal knowledge graph (she's an SMU Cox MS Business Analytics student in Dallas aiming at energy/climate strategy and consulting).
+New item: ${JSON.stringify(compactItems().find(i=>i.id===id))}
+Existing items: ${JSON.stringify(others)}
+Find every existing item the new one meaningfully connects to (usually 1 to 6). Each edge must have the new item's id as source.
+${LINK_RULES}
+Return only JSON: {"edges":[{"source":"${id}","target":"id","relation":"...","reason":"...","strength":1}]}`, "default");
+    const fresh = cleanEdges(res.edges, id);
+    for (const e of fresh) await putEdge(e);
+    render(); toast(fresh.length ? `Linked to ${fresh.length} item${fresh.length>1?"s":""}.` : "No strong links found yet.");
+  } catch(e){ toast(aiError(e)); }
+  if (btn) btn.disabled = false;
+}
+
+function mdLite(text){
+  const lines = esc(text).split(/\n/);
+  let html="", inList=false;
+  for (let l of lines){
+    l = l.replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/\[\[([a-z0-9-]+)\]\]/gi, (_,id)=>refHtml(id));
+    if (/^\s*[-*•]\s+/.test(l)){ if(!inList){html+="<ul>";inList=true;} html+=`<li>${l.replace(/^\s*[-*•]\s+/,"")}</li>`; }
+    else { if(inList){html+="</ul>";inList=false;} if(l.trim()) html+=`<p>${l}</p>`; }
+  }
+  if (inList) html+="</ul>";
+  return html;
+}
+let askCtl = null;
+async function ask(question){
+  if (!question.trim()) return;
+  if (!aiReady()){ openSettings("Add your Anthropic API key to ask your brain questions."); return; }
+  askCtl?.abort(); askCtl = new AbortController();
+  const out = $("#answer"); out.innerHTML = `<p class="thinking">Thinking…</p>`;
+  $("#btnAsk").disabled = true;
+  const edges = [...state.edges.values()].map(e => ({a:e.source,b:e.target,relation:e.relation,why:e.reason}));
+  const prompt = `You are Lexi Loughlin's second brain: a knowledge graph of her notes, documents, GitHub repos, projects, classes, goals and ideas. She's an M.S. Business Analytics student at SMU Cox in Dallas (graduating May 2027), a former elite ice dancer and a business writer, aiming at energy/climate strategy, consulting and building new systems. Today is ${today()}.
+ITEMS (days_since_touched shows how long since she worked on it):
+${JSON.stringify(compactItems())}
+CONNECTIONS:
+${JSON.stringify(edges)}
+
+Her question: ${question}
+
+Answer from the graph. Be specific and opinionated, like a sharp friend who has read all her stuff. Cite items inline as [[id]] (exact ids from the list) every time you mention one. Use a one-line takeaway, then 3 to 6 short bullets, each with a concrete next step. Under 200 words. Plain text with "- " bullets and **bold** only.`;
+  try{
+    const r = await aiText(prompt, { modelTier:"default", cache:false, signal: askCtl.signal,
+      onText: ({text}) => { out.innerHTML = mdLite(text); bindRefs(out); } });
+    out.innerHTML = mdLite(r.text); bindRefs(out);
+    const ids = [...r.text.matchAll(/\[\[([a-z0-9-]+)\]\]/gi)].map(m=>m[1]);
+    if (ids.length) highlightIds(ids);
+  } catch(e){ if (e?.name!=="AbortError") out.innerHTML = `<p class="empty">${esc(aiError(e))}</p>`; }
+  $("#btnAsk").disabled = false;
+}
+$("#presets").innerHTML = PRESETS.map(p => `<button class="chip">${esc(p)}</button>`).join("");
+$("#presets").querySelectorAll(".chip").forEach(c => c.onclick = () => { $("#q").value = c.textContent; ask(c.textContent); });
+$("#btnAsk").onclick = () => ask($("#q").value);
+$("#q").onkeydown = e => { if (e.key==="Enter" && !e.shiftKey){ e.preventDefault(); ask($("#q").value); } };
+
+/* ---------- add ---------- */
+$("#btnSave").onclick = async () => {
+  const title = $("#fTitle").value.trim();
+  if (!title){ $("#saveNote").textContent = "Give it a title first."; return; }
+  const it = { id:newId($("#fType").value.slice(0,1)), title, type:$("#fType").value, status:$("#fStatus").value,
+    body:$("#fBody").value.trim(), tags:$("#fTags").value.split(",").map(s=>s.trim()).filter(Boolean),
+    url:$("#fUrl").value.trim(), created:today(), touched:today() };
+  await putItem(it);
+  ["#fTitle","#fBody","#fTags","#fUrl"].forEach(s => $(s).value="");
+  $("#saveNote").textContent = "Added.";
+  select(it.id);
+  if (aiReady()) linkItem(it.id);
+};
+
+const drop = $("#drop");
+["dragover","dragenter"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("over"); }));
+["dragleave","drop"].forEach(ev => drop.addEventListener(ev, () => drop.classList.remove("over")));
+drop.addEventListener("drop", e => { e.preventDefault(); readFiles(e.dataTransfer.files); });
+$("#fileIn").onchange = e => readFiles(e.target.files);
+async function readFiles(files){
+  let txt = "";
+  for (const f of files){ txt += `\n\n### FILE: ${f.name}\n` + (await f.text()).slice(0, 12000); }
+  $("#bulk").value = ($("#bulk").value + txt).trim();
+  $("#bulkNote").textContent = `${files.length} file${files.length>1?"s":""} loaded. Click Extract.`;
+}
+$("#btnBulk").onclick = async () => {
+  const text = $("#bulk").value.trim(); if (!text) return;
+  const btn = $("#btnBulk"); btn.disabled = true; $("#bulkNote").textContent = "Reading…";
+  try{
+    const res = await askJSON(`Split this material into separate knowledge-graph items for Lexi Loughlin's second brain. One item per distinct project, idea, goal, note, document or class. Keep the useful specifics (names, datasets, numbers, tools, dates) in "body" (2 to 5 sentences, her perspective). Don't duplicate these existing titles: ${JSON.stringify([...state.items.values()].map(i=>i.title))}.
+type: one of project, repo, goal, idea, note, doc, course. status: one of active, unfinished, someday, paused, done.
+Return only JSON: {"items":[{"title":"...","type":"...","status":"...","tags":["..."],"body":"..."}]}
+
+MATERIAL:
+${text.slice(0, 30000)}`, "default");
+    const created = [];
+    for (const r of (res.items||[]).slice(0, 25)){
+      if (!r?.title) continue;
+      const type = TYPES[r.type] ? r.type : "note";
+      const it = { id:newId(type.slice(0,1)), title:String(r.title).slice(0,90), type,
+        status:["active","unfinished","someday","paused","done"].includes(r.status)?r.status:"active",
+        body:String(r.body||""), tags:(r.tags||[]).slice(0,6).map(String), url:"", created:today(), touched:today() };
+      await putItem(it); created.push(it.id);
+    }
+    $("#bulk").value = "";
+    $("#bulkNote").textContent = `Added ${created.length} items. Linking them…`;
+    for (const id of created) await linkItem(id);
+    $("#bulkNote").textContent = `Added and linked ${created.length} items.`;
+    highlightIds(created);
+  } catch(e){ $("#bulkNote").textContent = aiError(e); }
+  btn.disabled = false;
+};
+
+/* ---------- GitHub sync: the part that builds itself ---------- */
+const GH_USER = "lexiloughlin";
+const SKIP = /^(skills-introduction|forking-|week\d|week-\d|x3d\d|-?x2s|assignment-|python-notebooks)/i;
+function cleanReadme(md){
+  return md.replace(/<!--[\s\S]*?-->/g,"").replace(/!\[[^\]]*\]\([^)]*\)/g,"").replace(/\[([^\]]+)\]\([^)]*\)/g,"$1")
+    .replace(/```[\s\S]*?```/g,"").replace(/^#+\s*/gm,"").replace(/[*_`>|]/g,"").replace(/\n{2,}/g,"\n").trim();
+}
+async function fetchReadme(repo){
+  for (const f of ["README.md","readme.md","README"]){
+    try{ const r = await fetch(`https://raw.githubusercontent.com/${GH_USER}/${repo.name}/${repo.default_branch||"main"}/${f}`); if (r.ok) return await r.text(); }catch(e){}
+  }
+  return "";
+}
+async function syncGitHub(quiet){
+  const btn = $("#btnSync"); btn.disabled = true; if (!quiet) toast("Checking your GitHub…", 0);
+  let repos;
+  try{
+    const r = await fetch(`https://api.github.com/users/${GH_USER}/repos?per_page=100&sort=pushed`);
+    if (!r.ok) throw r.status;
+    repos = await r.json();
+  } catch(e){ btn.disabled = false; if (!quiet) toast("Couldn't reach GitHub right now (it allows 60 checks an hour). Try again later."); return; }
+  repos = repos.filter(r => !r.fork && !SKIP.test(r.name));
+  const added = [], updated = [];
+  for (const repo of repos){
+    const url = repo.html_url, lower = url.toLowerCase();
+    const existing = [...state.items.values()].find(i => i.id==="gh-"+repo.name.toLowerCase() || (i.url||"").toLowerCase().replace(/\/$/,"") === lower);
+    const pushed = (repo.pushed_at||repo.updated_at||"").slice(0,10);
+    if (existing && existing.gh_pushed === repo.pushed_at) continue;
+    const readme = await fetchReadme(repo);
+    const thin = cleanReadme(readme).length < 200 || /\[add /i.test(readme);
+    const facts = [repo.language && `Language: ${repo.language}.`, repo.homepage && `Live: ${repo.homepage}.`, thin && "README is missing or thin."].filter(Boolean).join(" ");
+    const body = [repo.description, cleanReadme(readme).slice(0, 900), facts].filter(Boolean).join("\n\n");
+    const tags = [repo.language, ...(repo.topics||[]), thin && "needs README"].filter(Boolean).slice(0,6);
+    if (existing){
+      const next = {...existing, gh_pushed: repo.pushed_at, touched: (existing.touched||"") > pushed ? existing.touched : pushed};
+      if (existing.id.startsWith("gh-")) Object.assign(next, {body, tags});
+      state.items.set(next.id, next); updated.push(next.id);
+    } else {
+      const it = { id:"gh-"+repo.name.toLowerCase(), type:"repo", title:repo.name, status: thin ? "unfinished" : "active",
+        body: body || "New repo, no description yet.", tags, url, created: (repo.created_at||"").slice(0,10), touched: pushed, gh_pushed: repo.pushed_at };
+      state.items.set(it.id, it); added.push(it.id);
+    }
+  }
+  state.synced = new Date().toISOString(); save(); render();
+  btn.disabled = false;
+  if (added.length && aiReady()){
+    toast(`Found ${added.length} new repo${added.length>1?"s":""}. Linking…`, 0);
+    for (const id of added) await linkItem(id);
+    highlightIds(added);
+  }
+  const msg = added.length || updated.length
+    ? `GitHub: ${added.length} new, ${updated.length} updated.${added.length && !aiReady() ? " Add an API key in Settings to auto-link them." : ""}`
+    : "GitHub is up to date.";
+  if (!quiet || added.length || updated.length) toast(msg, 4500);
+}
+$("#btnSync").onclick = () => syncGitHub(false);
+
+/* ---------- settings, backup ---------- */
+function openSettings(msg){
+  $("#setMsg").textContent = msg || "";
+  $("#keyIn").value = ls.get(KEY_STORE) || "";
+  $("#modelIn").value = ls.get(MODEL_STORE) || "claude-sonnet-5-5";
+  $("#settings").hidden = false; $("#keyIn").focus();
+}
+function closeSettings(){
+  ls.set(KEY_STORE, $("#keyIn").value.trim()); ls.set(MODEL_STORE, $("#modelIn").value);
+  $("#settings").hidden = true; updateAiNote();
+}
+$("#btnSettings").onclick = () => openSettings("");
+$("#btnSetDone").onclick = closeSettings;
+$("#settings").addEventListener("click", e => { if (e.target.id==="settings") closeSettings(); });
+document.addEventListener("keydown", e => { if (e.key==="Escape" && !$("#settings").hidden) closeSettings(); });
+$("#btnExport").onclick = async () => {
+  const data = JSON.stringify({items:[...state.items.values()], edges:[...state.edges.values()]});
+  try{ await navigator.clipboard.writeText(data); $("#ioNote").textContent = `Copied ${state.items.size} items. Paste it somewhere safe.`; }
+  catch(e){ $("#ioBox").value = data; $("#ioBox").select(); $("#ioNote").textContent = "Copy the selected text above."; }
+};
+$("#btnImport").onclick = () => {
+  let d; try{ d = JSON.parse($("#ioBox").value); }catch(e){ $("#ioNote").textContent = "That isn't a backup. Paste the whole copied text."; return; }
+  let ni=0, ne=0;
+  for (const it of (d.items||[])){ if (!it?.id || !it.title) continue;
+    const cur = state.items.get(it.id); if (!cur || (it.touched||"") >= (cur.touched||"")){ state.items.set(it.id, it); ni++; } }
+  for (const e of (d.edges||[])){ if (e?.id && state.items.has(e.source) && state.items.has(e.target)){ state.edges.set(e.id, e); ne++; } }
+  save(); render(); $("#ioBox").value = ""; $("#ioNote").textContent = `Imported ${ni} items and ${ne} connections.`;
+};
+function updateAiNote(){
+  $("#askNote").innerHTML = aiReady() ? "" : `AI is off. <a href="#" id="aiLink">Add your API key</a>`;
+  $("#aiLink")?.addEventListener("click", e => { e.preventDefault(); openSettings(""); });
+}
+
+/* ---------- boot ---------- */
+window.addEventListener("resize", () => { svg.attr("data-centered", null); render(); });
+(async () => {
+  const hadData = load();
+  render(); updateAiNote();
+  if (hadData) toast(`${state.items.size} items loaded.`);
+  const stale = !state.synced || Date.now() - new Date(state.synced).getTime() > 6*36e5;
+  if (stale) await syncGitHub(hadData);
+  if (!hadData && state.items.size) toast(`Built your brain from ${state.items.size} GitHub repos. Add notes, goals and ideas, or import your claude.ai backup in Settings.`, 7000);
+  if (window.claude?.use){ try{ sample = await window.claude.use("sample"); updateAiNote(); }catch(e){} }
+})();
+})();
+</script>
+</body>
+</html>
